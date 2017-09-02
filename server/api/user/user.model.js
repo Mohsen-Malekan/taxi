@@ -20,6 +20,11 @@ var UserSchema = new Schema({
       }
     }
   },
+  mobile : {
+    type      : String,
+    lowercase : true,
+    required  : true
+  },
   role : {
     type    : String,
     default : 'user'
@@ -34,10 +39,19 @@ var UserSchema = new Schema({
       }
     }
   },
-  provider : String,
-  salt     : String,
-  google   : {},
-  github   : {}
+  activationCode : String,
+  lastState      : String,
+  lastLat        : String,
+  lastLng        : String,
+  asset          : String,
+  lastLogin      : String,
+  sharingCode    : String,
+  challengerCode : String,
+  mobile_        : String,
+  provider       : String,
+  salt           : String,
+  google         : {},
+  github         : {}
 });
 
 /**
@@ -88,6 +102,13 @@ UserSchema
     return password.length;
   }, 'Password cannot be blank');
 
+// Validate empty mobile
+UserSchema
+  .path('mobile')
+  .validate(function(mobile) {
+    return mobile.length;
+  }, 'mobile cannot be blank');
+
 // Validate email is not taken
 UserSchema
   .path('email')
@@ -110,6 +131,32 @@ UserSchema
         throw err;
       });
   }, 'The specified email address is already in use.');
+
+// Validate mobile is not taken
+UserSchema
+  .path('mobile')
+  .validate(function(value) {
+    return this.constructor.findOne({ mobile : value }).exec()
+      .then(user => {
+        if(user) {
+          if(this.id === user.id) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      })
+      .catch(function(err) {
+        throw err;
+      });
+  }, 'The specified mobile number is already in use.');
+
+// Validate mobile is valid
+UserSchema
+  .path('mobile')
+  .validate(function(mobile) {
+    return mobile.match(/^(09)[0-9]{9}$/);
+  }, 'The specified mobile number is not valid');
 
 var validatePresenceOf = function(value) {
   return value && value.length;
