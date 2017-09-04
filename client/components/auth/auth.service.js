@@ -6,7 +6,7 @@ import _ from 'lodash';
 class _User {
   _id = '';
   name = '';
-  email = '';
+  mobile = '';
   role = '';
   $promise = undefined;
 }
@@ -39,11 +39,11 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Promise}
      */
     login({
-      email,
+      mobile,
       password
     }, callback) {
       return $http.post('/auth/local', {
-        email,
+        mobile,
         password
       })
         .then(res => {

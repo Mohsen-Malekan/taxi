@@ -13,11 +13,7 @@ var UserSchema = new Schema({
     type      : String,
     lowercase : true,
     required() {
-      if(authTypes.indexOf(this.provider) === -1) {
-        return true;
-      } else {
-        return false;
-      }
+      return authTypes.indexOf(this.provider) === -1;
     }
   },
   mobile : {
@@ -32,22 +28,18 @@ var UserSchema = new Schema({
   password : {
     type : String,
     required() {
-      if(authTypes.indexOf(this.provider) === -1) {
-        return true;
-      } else {
-        return false;
-      }
+      return authTypes.indexOf(this.provider) === -1;
     }
   },
+  active         : {type : Boolean, default : false},
   activationCode : String,
   lastState      : String,
-  lastLat        : String,
-  lastLng        : String,
-  asset          : String,
-  lastLogin      : String,
+  lastLat        : Number,
+  lastLng        : Number,
+  asset          : Number,
   sharingCode    : String,
   challengerCode : String,
-  mobile_        : String,
+  lastLogin      : String,
   provider       : String,
   salt           : String,
   google         : {},
@@ -67,6 +59,12 @@ UserSchema
       role : this.role
     };
   });
+
+// UserSchema
+//   .virtual('id')
+//   .get(function() {
+//     return this._id;
+//   });
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
@@ -120,10 +118,7 @@ UserSchema
     return this.constructor.findOne({ email : value }).exec()
       .then(user => {
         if(user) {
-          if(this.id === user.id) {
-            return true;
-          }
-          return false;
+          return this.id === user.id;
         }
         return true;
       })
@@ -139,10 +134,7 @@ UserSchema
     return this.constructor.findOne({ mobile : value }).exec()
       .then(user => {
         if(user) {
-          if(this.id === user.id) {
-            return true;
-          }
-          return false;
+          return this.id === user.id;
         }
         return true;
       })
@@ -150,6 +142,22 @@ UserSchema
         throw err;
       });
   }, 'The specified mobile number is already in use.');
+
+// Validate sharingCode is not taken
+UserSchema
+  .path('sharingCode')
+  .validate(function(value) {
+    return this.constructor.findOne({ sharingCode : value }).exec()
+      .then(user => {
+        if(user) {
+          return this.id === user.id;
+        }
+        return true;
+      })
+      .catch(function(err) {
+        throw err;
+      });
+  }, 'The sharingCode is not valid.');
 
 // Validate mobile is valid
 UserSchema

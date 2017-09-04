@@ -3,14 +3,13 @@
 export default class LoginController {
   user = {
     name     : '',
-    email    : '',
+    mobile   : '',
     password : ''
   };
   errors = {
     login : undefined
   };
   submitted = false;
-
 
   /*@ngInject*/
   constructor(Auth, $state) {
@@ -23,7 +22,7 @@ export default class LoginController {
 
     if(form.$valid) {
       this.Auth.login({
-        email    : this.user.email,
+        mobile   : this.user.mobile,
         password : this.user.password
       })
         .then(() => {

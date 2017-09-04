@@ -3,6 +3,7 @@
 import User from './user.model';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
+import randomstring from 'randomstring';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -14,6 +15,7 @@ function validationError(res, statusCode) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.log('err> ', err);
     return res.status(statusCode).send(err);
   };
 }
@@ -34,12 +36,15 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res) {
-  var newUser = new User(req.body);
+  let newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
+  newUser.sharingCode = randomstring.generate(6).toUpperCase();
+  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
   newUser.save()
     .then(function(user) {
-      var token = jwt.sign({ _id : user._id }, config.secrets.session, {
+      // todo: send activation code to user
+      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
         expiresIn : 60 * 60 * 5
       });
       res.json({ token });
@@ -51,7 +56,7 @@ export function create(req, res) {
  * Get a single user
  */
 export function show(req, res, next) {
-  var userId = req.params.id;
+  let userId = req.params.id;
 
   return User.findById(userId).exec()
     .then(user => {
@@ -79,9 +84,9 @@ export function destroy(req, res) {
  * Change a users password
  */
 export function changePassword(req, res) {
-  var userId = req.user._id;
-  var oldPass = String(req.body.oldPassword);
-  var newPass = String(req.body.newPassword);
+  let userId = req.user._id;
+  let oldPass = String(req.body.oldPassword);
+  let newPass = String(req.body.newPassword);
 
   return User.findById(userId).exec()
     .then(user => {
@@ -99,10 +104,55 @@ export function changePassword(req, res) {
 }
 
 /**
+ * send activationCode to user
+ */
+export function getActivationCode(req, res) {
+  let userId = req.user._id;
+
+  return User.findById(userId, '-salt -password').exec()
+    .then(user => {
+      if(!user) {
+        return res.status(404).end();
+      }
+      let activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+      user.activationCode = activationCode;
+      return user.save()
+          .then(() => {
+            // todo: send activation code to user
+            return res.json({activationCode});
+          })
+          .catch(handleError(res));
+    })
+    .catch(handleError(res));
+}
+
+/**
+ * confirm user
+ */
+export function confirm(req, res) {
+  let userId = req.user._id;
+
+  return User.findById(userId, '-salt -password').exec()
+    .then(user => {
+      if(!user) {
+        return res.status(404).end();
+      }
+      if(user.activationCode === req.body.activationCode) {
+        user.active = true;
+        return user.save()
+          .then(() => res.json(user))
+          .catch(handleError(res));
+      }
+      return res.status(400).end();
+    })
+    .catch(handleError(res));
+}
+
+/**
  * Get my info
  */
 export function me(req, res, next) {
-  var userId = req.user._id;
+  let userId = req.user._id;
 
   return User.findOne({ _id : userId }, '-salt -password').exec()
     .then(user => { // don't ever give out the password or salt

@@ -4,39 +4,36 @@ import routing from './main.routes';
 
 export class MainController {
 
-  awesomeThings = [];
-  newThing = '';
-
   /*@ngInject*/
   constructor($http) {
     this.$http = $http;
   }
 
   $onInit() {
-    this.$http.get('/api/things')
+    this.requestActivationCode();
+  }
+
+  requestActivationCode() {
+    this.$http.get('/api/users/confirm')
       .then(response => {
-        this.awesomeThings = response.data;
+        this.activationCode = response.data.activationCode;
+        console.log(response.data, this.activationCode);
       });
   }
 
-  addThing() {
-    if(this.newThing) {
-      this.$http.post('/api/things', {
-        name : this.newThing
+  submit() {
+    this.$http.post('/api/users/confirm', {activationCode : this.code})
+      .then(response => {
+        console.log('res>', response.data);
       });
-      this.newThing = '';
-    }
-  }
-
-  deleteThing(thing) {
-    this.$http.delete(`/api/things/${thing._id}`);
   }
 }
 
 export default angular.module('taxiApp.main', [uiRouter])
   .config(routing)
   .component('main', {
-    template   : require('./main.html'),
-    controller : MainController
+    template     : require('./main.html'),
+    controller   : MainController,
+    controllerAs : 'vm'
   })
   .name;
