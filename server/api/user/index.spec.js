@@ -5,12 +5,12 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var userCtrlStub = {
-  index          : 'userCtrl.index',
-  destroy        : 'userCtrl.destroy',
-  me             : 'userCtrl.me',
-  changePassword : 'userCtrl.changePassword',
-  show           : 'userCtrl.show',
-  create         : 'userCtrl.create'
+  index: 'userCtrl.index',
+  destroy: 'userCtrl.destroy',
+  me: 'userCtrl.me',
+  changePassword: 'userCtrl.changePassword',
+  show: 'userCtrl.show',
+  create: 'userCtrl.create'
 };
 
 var authServiceStub = {
@@ -23,21 +23,21 @@ var authServiceStub = {
 };
 
 var routerStub = {
-  get    : sinon.spy(),
-  put    : sinon.spy(),
-  post   : sinon.spy(),
-  delete : sinon.spy()
+  get: sinon.spy(),
+  put: sinon.spy(),
+  post: sinon.spy(),
+  delete: sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var userIndex = proxyquire('./index', {
-  express : {
+  express: {
     Router() {
       return routerStub;
     }
   },
-  './user.controller'       : userCtrlStub,
-  '../../auth/auth.service' : authServiceStub
+  './user.controller': userCtrlStub,
+  '../../auth/auth.service': authServiceStub
 });
 
 describe('User API Router:', function() {

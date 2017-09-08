@@ -40,12 +40,12 @@ export function create(req, res) {
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
-  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.activationCode = randomstring.generate({length: 5, charset: 'numeric'}).toString();
   newUser.save()
     .then(function(user) {
       // todo: send activation code to user
-      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
-        expiresIn : 60 * 60 * 5
+      let token = jwt.sign({ _id: user._id }, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
       });
       res.json({ token });
     })
@@ -114,7 +114,7 @@ export function getActivationCode(req, res) {
       if(!user) {
         return res.status(404).end();
       }
-      let activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+      let activationCode = randomstring.generate({length: 5, charset: 'numeric'}).toString();
       user.activationCode = activationCode;
       return user.save()
           .then(() => {
@@ -154,7 +154,7 @@ export function confirm(req, res) {
 export function me(req, res, next) {
   let userId = req.user._id;
 
-  return User.findOne({ _id : userId }, '-salt -password').exec()
+  return User.findOne({ _id: userId }, '-salt -password').exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
         return res.status(401).end();

@@ -35,6 +35,7 @@
     "method-override": "^2.3.5",
     "mongoose": "^4.1.2",
     "morgan": "^1.8.0",
+    "node-zopfli": "^2.0.2",
     "passport": "~0.3.0",
     "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",

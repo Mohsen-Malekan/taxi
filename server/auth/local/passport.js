@@ -3,12 +3,12 @@ import {Strategy as LocalStrategy} from 'passport-local';
 
 function localAuthenticate(User, mobile, password, done) {
   User.findOne({
-    mobile : mobile.toLowerCase()
+    mobile: mobile.toLowerCase()
   }).exec()
     .then(user => {
       if(!user) {
         return done(null, false, {
-          message : 'This mobile is not registered.'
+          message: 'This mobile is not registered.'
         });
       }
       user.authenticate(password, function(authError, authenticated) {
@@ -16,7 +16,7 @@ function localAuthenticate(User, mobile, password, done) {
           return done(authError);
         }
         if(!authenticated) {
-          return done(null, false, { message : 'This password is not correct.' });
+          return done(null, false, { message: 'This password is not correct.' });
         } else {
           return done(null, user);
         }
@@ -27,8 +27,8 @@ function localAuthenticate(User, mobile, password, done) {
 
 export function setup(User/*, config*/) {
   passport.use(new LocalStrategy({
-    usernameField : 'mobile',
-    passwordField : 'password' // this is the virtual field on the model
+    usernameField: 'mobile',
+    passwordField: 'password' // this is the virtual field on the model
   }, function(mobile, password, done) {
     return localAuthenticate(User, mobile, password, done);
   }));

@@ -6,11 +6,11 @@
 module.exports = {
 
   // MongoDB connection options
-  mongo : {
-    uri : 'mongodb://localhost/taxi-dev'
+  mongo: {
+    uri: 'mongodb://localhost/taxi-dev'
   },
 
   // Seed database on startup
-  seedDB : false
+  seedDB: false
 
 };

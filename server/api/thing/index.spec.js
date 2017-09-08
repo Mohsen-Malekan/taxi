@@ -5,30 +5,30 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var thingCtrlStub = {
-  index   : 'thingCtrl.index',
-  show    : 'thingCtrl.show',
-  create  : 'thingCtrl.create',
-  upsert  : 'thingCtrl.upsert',
-  patch   : 'thingCtrl.patch',
-  destroy : 'thingCtrl.destroy'
+  index: 'thingCtrl.index',
+  show: 'thingCtrl.show',
+  create: 'thingCtrl.create',
+  upsert: 'thingCtrl.upsert',
+  patch: 'thingCtrl.patch',
+  destroy: 'thingCtrl.destroy'
 };
 
 var routerStub = {
-  get    : sinon.spy(),
-  put    : sinon.spy(),
-  patch  : sinon.spy(),
-  post   : sinon.spy(),
-  delete : sinon.spy()
+  get: sinon.spy(),
+  put: sinon.spy(),
+  patch: sinon.spy(),
+  post: sinon.spy(),
+  delete: sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var thingIndex = proxyquire('./index.js', {
-  express : {
+  express: {
     Router() {
       return routerStub;
     }
   },
-  './thing.controller' : thingCtrlStub
+  './thing.controller': thingCtrlStub
 });
 
 describe('Thing API Router:', function() {
