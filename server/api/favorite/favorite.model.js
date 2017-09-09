@@ -3,11 +3,12 @@
 import mongoose from 'mongoose';
 import {registerEvents} from './favorite.events';
 
-var FavoriteSchema = new mongoose.Schema({
+let FavoriteSchema = new mongoose.Schema({
   userId: String,
   name: String,
   info: String,
-  location: {}
+  lat: Number,
+  lng: Number
 });
 
 registerEvents(FavoriteSchema);

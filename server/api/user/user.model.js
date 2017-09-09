@@ -7,7 +7,7 @@ import {registerEvents} from './user.events';
 
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
-var UserSchema = new Schema({
+let UserSchema = new Schema({
   name: String,
   email: {
     type: String,
@@ -33,10 +33,10 @@ var UserSchema = new Schema({
   },
   active: {type: Boolean, default: false},
   activationCode: String,
-  lastState: String,
-  lastLat: Number,
-  lastLng: Number,
-  asset: Number,
+  lastState: {type: String, default: '0', maxLength: 1},
+  lastLat: {type: Number, default: 0},
+  lastLng: {type: Number, default: 0},
+  asset: {type: Number, default: 0},
   sharingCode: String,
   challengerCode: String,
   lastLogin: String,

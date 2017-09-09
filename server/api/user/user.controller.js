@@ -4,10 +4,15 @@ import User from './user.model';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 import randomstring from 'randomstring';
+import request from 'request';
+import _ from 'lodash';
+
+const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
+    console.log('validationError> ', err);
     return res.status(statusCode).json(err);
   };
 }
@@ -15,7 +20,7 @@ function validationError(res, statusCode) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    console.log('err> ', err);
+    console.log('handleError> ', err);
     return res.status(statusCode).send(err);
   };
 }
@@ -43,11 +48,27 @@ export function create(req, res) {
   newUser.activationCode = randomstring.generate({length: 5, charset: 'numeric'}).toString();
   newUser.save()
     .then(function(user) {
-      // todo: send activation code to user
+      // send activationCode to user
+      request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (error, response, body) => {
+        console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+        console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
+      });
       let token = jwt.sign({ _id: user._id }, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      res.json({ token });
+      let userInfo = _.pick(user, [
+        'name',
+        'email',
+        'mobile',
+        'role',
+        'active',
+        'lastState',
+        'lastLat',
+        'lastLng',
+        'asset',
+        'sharingCode']);
+      userInfo.id = user._id;
+      res.json({ token, user: userInfo });
     })
     .catch(validationError(res));
 }

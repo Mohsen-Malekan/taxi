@@ -3,6 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import {signToken} from '../auth.service';
+import _ from 'lodash';
 
 var router = express.Router();
 
@@ -16,8 +17,21 @@ router.post('/', function(req, res, next) {
       return res.status(404).json({message: 'Something went wrong, please try again.'});
     }
 
-    var token = signToken(user._id, user.role);
-    res.json({ token });
+    let userInfo = _.pick(user, [
+      'name',
+      'email',
+      'mobile',
+      'role',
+      'active',
+      'lastState',
+      'lastLat',
+      'lastLng',
+      'asset',
+      'sharingCode']);
+    userInfo.id = user._id;
+
+    let token = signToken(user._id, user.role);
+    res.json({ token, user: userInfo });
   })(req, res, next);
 });
 
