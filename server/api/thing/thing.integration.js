@@ -35,8 +35,8 @@ describe('Thing API:', function() {
       request(app)
         .post('/api/things')
         .send({
-          name: 'New Thing',
-          info: 'This is the brand new thing!!!'
+          name : 'New Thing',
+          info : 'This is the brand new thing!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -89,8 +89,8 @@ describe('Thing API:', function() {
       request(app)
         .put(`/api/things/${newThing._id}`)
         .send({
-          name: 'Updated Thing',
-          info: 'This is the updated thing!!!'
+          name : 'Updated Thing',
+          info : 'This is the updated thing!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -138,8 +138,8 @@ describe('Thing API:', function() {
       request(app)
         .patch(`/api/things/${newThing._id}`)
         .send([
-          { op: 'replace', path: '/name', value: 'Patched Thing' },
-          { op: 'replace', path: '/info', value: 'This is the patched thing!!!' }
+          { op : 'replace', path : '/name', value : 'Patched Thing' },
+          { op : 'replace', path : '/info', value : 'This is the patched thing!!!' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)

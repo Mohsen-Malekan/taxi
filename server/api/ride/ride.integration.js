@@ -35,8 +35,8 @@ describe('Ride API:', function() {
       request(app)
         .post('/api/rides')
         .send({
-          name: 'New Ride',
-          info: 'This is the brand new ride!!!'
+          name : 'New Ride',
+          info : 'This is the brand new ride!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -89,8 +89,8 @@ describe('Ride API:', function() {
       request(app)
         .put(`/api/rides/${newRide._id}`)
         .send({
-          name: 'Updated Ride',
-          info: 'This is the updated ride!!!'
+          name : 'Updated Ride',
+          info : 'This is the updated ride!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -138,8 +138,8 @@ describe('Ride API:', function() {
       request(app)
         .patch(`/api/rides/${newRide._id}`)
         .send([
-          { op: 'replace', path: '/name', value: 'Patched Ride' },
-          { op: 'replace', path: '/info', value: 'This is the patched ride!!!' }
+          { op : 'replace', path : '/name', value : 'Patched Ride' },
+          { op : 'replace', path : '/info', value : 'This is the patched ride!!!' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)

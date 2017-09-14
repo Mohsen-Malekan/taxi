@@ -5,30 +5,30 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var favoriteCtrlStub = {
-  index: 'favoriteCtrl.index',
-  show: 'favoriteCtrl.show',
-  create: 'favoriteCtrl.create',
-  upsert: 'favoriteCtrl.upsert',
-  patch: 'favoriteCtrl.patch',
-  destroy: 'favoriteCtrl.destroy'
+  index   : 'favoriteCtrl.index',
+  show    : 'favoriteCtrl.show',
+  create  : 'favoriteCtrl.create',
+  upsert  : 'favoriteCtrl.upsert',
+  patch   : 'favoriteCtrl.patch',
+  destroy : 'favoriteCtrl.destroy'
 };
 
 var routerStub = {
-  get: sinon.spy(),
-  put: sinon.spy(),
-  patch: sinon.spy(),
-  post: sinon.spy(),
-  delete: sinon.spy()
+  get    : sinon.spy(),
+  put    : sinon.spy(),
+  patch  : sinon.spy(),
+  post   : sinon.spy(),
+  delete : sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var favoriteIndex = proxyquire('./index.js', {
-  express: {
+  express : {
     Router() {
       return routerStub;
     }
   },
-  './favorite.controller': favoriteCtrlStub
+  './favorite.controller' : favoriteCtrlStub
 });
 
 describe('Favorite API Router:', function() {

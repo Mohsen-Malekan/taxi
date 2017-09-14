@@ -5,30 +5,30 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var rideCtrlStub = {
-  index: 'rideCtrl.index',
-  show: 'rideCtrl.show',
-  create: 'rideCtrl.create',
-  upsert: 'rideCtrl.upsert',
-  patch: 'rideCtrl.patch',
-  destroy: 'rideCtrl.destroy'
+  index   : 'rideCtrl.index',
+  show    : 'rideCtrl.show',
+  create  : 'rideCtrl.create',
+  upsert  : 'rideCtrl.upsert',
+  patch   : 'rideCtrl.patch',
+  destroy : 'rideCtrl.destroy'
 };
 
 var routerStub = {
-  get: sinon.spy(),
-  put: sinon.spy(),
-  patch: sinon.spy(),
-  post: sinon.spy(),
-  delete: sinon.spy()
+  get    : sinon.spy(),
+  put    : sinon.spy(),
+  patch  : sinon.spy(),
+  post   : sinon.spy(),
+  delete : sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var rideIndex = proxyquire('./index.js', {
-  express: {
+  express : {
     Router() {
       return routerStub;
     }
   },
-  './ride.controller': rideCtrlStub
+  './ride.controller' : rideCtrlStub
 });
 
 describe('Ride API Router:', function() {

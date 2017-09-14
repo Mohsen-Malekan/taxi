@@ -6,7 +6,7 @@ import compose from 'composable-middleware';
 import User from '../api/user/user.model';
 
 var validateJwt = expressJwt({
-  secret: config.secrets.session
+  secret : config.secrets.session
 });
 
 /**
@@ -55,7 +55,7 @@ export function hasRole(roleRequired) {
       if(config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
         return next();
       } else {
-        return res.status(403).send('Forbidden');
+        return res.status(403).send('درخواست غیرمجاز');
       }
     });
 }
@@ -64,8 +64,8 @@ export function hasRole(roleRequired) {
  * Returns a jwt token signed by the app secret
  */
 export function signToken(id, role) {
-  return jwt.sign({ _id: id, role }, config.secrets.session, {
-    expiresIn: 60 * 60 * 5
+  return jwt.sign({ _id : id, role }, config.secrets.session, {
+    expiresIn : 60 * 60 * 5
   });
 }
 

@@ -8,16 +8,16 @@ var router = express.Router();
 
 router
   .get('/', passport.authenticate('google', {
-    failureRedirect: '/signup',
-    scope: [
+    failureRedirect : '/signup',
+    scope           : [
       'profile',
       'email'
     ],
-    session: false
+    session : false
   }))
   .get('/callback', passport.authenticate('google', {
-    failureRedirect: '/signup',
-    session: false
+    failureRedirect : '/signup',
+    session         : false
   }), setTokenCookie);
 
 export default router;
