@@ -10,7 +10,7 @@ export class MainController {
   }
 
   $onInit() {
-    this.requestActivationCode();
+    // this.requestActivationCode();
   }
 
   requestActivationCode() {

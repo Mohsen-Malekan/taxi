@@ -72,9 +72,10 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a single Favorite from the DB
+// Gets a single Favorite of current user from the DB
 export function show(req, res) {
-  return Favorite.findById(req.params.id).exec()
+  let userId = req.user.id;
+  return Favorite.findOne({_id: req.params.id, userId}).exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -93,7 +94,8 @@ export function upsert(req, res) {
   if(req.body._id) {
     Reflect.deleteProperty(req.body, '_id');
   }
-  return Favorite.findOneAndUpdate({_id : req.params.id}, req.body, {new : true, upsert : true, setDefaultsOnInsert : true, runValidators : true}).exec()
+  let userId = req.user.id;
+  return Favorite.findOneAndUpdate({_id: req.params.id, userId}, req.body, {new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
 
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -104,7 +106,8 @@ export function patch(req, res) {
   if(req.body._id) {
     Reflect.deleteProperty(req.body, '_id');
   }
-  return Favorite.findById(req.params.id).exec()
+  let userId = req.user.id;
+  return Favorite.findOne({_id: req.params.id, userId}).exec()
     .then(handleEntityNotFound(res))
     .then(patchUpdates(req.body))
     .then(respondWithResult(res))
@@ -113,7 +116,8 @@ export function patch(req, res) {
 
 // Deletes a Favorite from the DB
 export function destroy(req, res) {
-  return Favorite.findById(req.params.id).exec()
+  let userId = req.user.id;
+  return Favorite.findOne({_id: req.params.id, userId}).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));

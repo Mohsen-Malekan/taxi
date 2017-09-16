@@ -45,7 +45,7 @@ export function create(req, res) {
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
-  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.activationCode = randomstring.generate({length: 5, charset: 'numeric'}).toString();
   newUser.save()
     .then(function(user) {
       // send activationCode to user
@@ -53,8 +53,8 @@ export function create(req, res) {
         console.log('sms error:      ', error || 'none'); // Print the error if one occurred
         console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
       });
-      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
-        expiresIn : 60 * 60 * 5
+      let token = jwt.sign({ _id: user._id }, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
       });
       let userInfo = _.pick(user, [
         'name',
@@ -68,7 +68,41 @@ export function create(req, res) {
         'asset',
         'sharingCode']);
       userInfo.id = user._id;
-      res.json({ token, user : userInfo });
+      res.json({ token, user: userInfo });
+    })
+    .catch(validationError(res));
+}
+
+/**
+ * Creates a new user with role='driver'
+ */
+export function createDriver(req, res) {
+  const DEFAULT_PASS = 'zxcv123fdsa654qwer789';
+  let newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.role = 'driver';
+  newUser.sharingCode = randomstring.generate(6).toUpperCase();
+  // newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.active = true;
+  newUser.password = DEFAULT_PASS;
+  newUser.save()
+    .then(function(user) {
+      let token = jwt.sign({ _id: user._id }, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
+      });
+      let userInfo = _.pick(user, [
+        'name',
+        'email',
+        'mobile',
+        'role',
+        'active',
+        'lastState',
+        'lastLat',
+        'lastLng',
+        'asset',
+        'sharingCode']);
+      userInfo.id = user._id;
+      res.json({ token, user: userInfo });
     })
     .catch(validationError(res));
 }
@@ -135,11 +169,15 @@ export function getActivationCode(req, res) {
       if(!user) {
         return res.status(404).end();
       }
-      let activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+      let activationCode = randomstring.generate({length: 5, charset: 'numeric'}).toString();
       user.activationCode = activationCode;
       return user.save()
           .then(() => {
-            // todo: send activation code to user
+            // end activation code to user
+            request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (error, response, body) => {
+              console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+              console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
+            });
             return res.json({activationCode});
           })
           .catch(handleError(res));
@@ -161,7 +199,7 @@ export function confirm(req, res) {
       if(user.activationCode === req.body.activationCode) {
         user.active = true;
         return user.save()
-          .then(() => res.status(200).end())
+          .then(() => res.status(204).end())
           .catch(handleError(res));
       }
       return res.status(400).end();
@@ -175,7 +213,7 @@ export function confirm(req, res) {
 export function me(req, res, next) {
   let userId = req.user._id;
 
-  return User.findOne({ _id : userId }, '-salt -password -activationCode').exec()
+  return User.findOne({ _id: userId }, '-salt -password -activationCode').exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
         return res.status(401).end();
