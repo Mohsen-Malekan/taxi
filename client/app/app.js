@@ -20,15 +20,25 @@ import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
+import track from './track/track.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 
 import './app.css';
 
 angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, _Auth, account,
-  admin, 'validation.match', navbar, footer, main, constants, util
+  admin, 'validation.match', navbar, footer, main, constants, util, track
 ])
   .config(routeConfig)
+  .directive('mongooseError', function() {
+    return {
+      restrict : 'A',
+      require  : 'ngModel',
+      link(scope, element, attrs, ngModel) {
+        element.on('keydown', () => ngModel.$setValidity('mongoose', true));
+      }
+    };
+  })
   .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in

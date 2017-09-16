@@ -11,6 +11,7 @@ export class MainController {
 
   $onInit() {
     // this.requestActivationCode();
+    this.notifyMe();
   }
 
   requestActivationCode() {
@@ -26,6 +27,19 @@ export class MainController {
       .then(response => {
         console.log('res>', response.data);
       });
+  }
+
+  notifyMe() {
+    let notification;
+    if(Notification.permission === 'granted') {
+      notification = new Notification('Reloaded!');
+    } else if(Notification.permission !== 'denied') {
+      Notification.requestPermission(function(permission) {
+        if(permission === 'granted') {
+          notification = new Notification('Reloaded!');
+        }
+      });
+    }
   }
 }
 

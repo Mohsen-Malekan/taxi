@@ -88,7 +88,7 @@ UserSchema
       return true;
     }
     return email.length;
-  }, 'Email cannot be blank');
+  }, 'رایانامه را وارد کنید');
 
 // Validate empty password
 UserSchema
@@ -98,14 +98,14 @@ UserSchema
       return true;
     }
     return password.length;
-  }, 'Password cannot be blank');
+  }, 'گذرواژه را وارد کنید');
 
 // Validate empty mobile
 UserSchema
   .path('mobile')
   .validate(function(mobile) {
     return mobile.length;
-  }, 'mobile cannot be blank');
+  }, 'شماره موبایل را وارد کنید');
 
 // Validate email is not taken
 UserSchema
@@ -125,7 +125,7 @@ UserSchema
       .catch(function(err) {
         throw err;
       });
-  }, 'The specified email address is already in use.');
+  }, 'رایانامه تکراری است.');
 
 // Validate mobile is not taken
 UserSchema
@@ -141,7 +141,7 @@ UserSchema
       .catch(function(err) {
         throw err;
       });
-  }, 'The specified mobile number is already in use.');
+  }, 'شماره موبایل تکراری است.');
 
 // Validate sharingCode is not taken
 UserSchema
@@ -157,14 +157,14 @@ UserSchema
       .catch(function(err) {
         throw err;
       });
-  }, 'The sharingCode is not valid.');
+  }, 'کد معرفی تکراری است.');
 
 // Validate mobile is valid
 UserSchema
   .path('mobile')
   .validate(function(mobile) {
     return mobile.match(/^(09)[0-9]{9}$/);
-  }, 'The specified mobile number is not valid');
+  }, 'شماره موبایل نامعتبر است');
 
 var validatePresenceOf = function(value) {
   return value && value.length;

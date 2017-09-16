@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h1>ثبت نام راننده</h1>
+    </div>
+    <div class="col-sm-12">
+        <form class="form" name="form" ng-submit="vm.register(form)" novalidate>
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
+                                            'has-error': form.name.$invalid && vm.submitted }">
+                    <label>نام</label>
+
+                    <input type="text" name="name" class="form-control" ng-model="vm.user.name"
+                           required/>
+                    <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
+                        A name is required
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-success': form.mobile.$valid && vm.submitted,
+                                            'has-error': form.mobile.$invalid && vm.submitted }">
+                    <label>شماره موبایل</label>
+
+                    <input type="text" name="mobile" class="form-control" ng-model="vm.user.mobile"
+                           required
+                           mongoose-error/>
+                    <p class="help-block" ng-show="form.mobile.$error.email && vm.submitted">
+                        Doesn't look like a valid mobile.
+                    </p>
+                    <p class="help-block" ng-show="form.mobile.$error.required && vm.submitted">
+                        What's your mobile number?
+                    </p>
+                    <p class="help-block" ng-show="form.mobile.$error.mongoose">
+                        {{ vm.errors.mobile }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-success': form.email.$valid && vm.submitted,
+                                            'has-error': form.email.$invalid && vm.submitted }">
+                    <label>رایانامه</label>
+
+                    <input type="email" name="email" class="form-control" ng-model="vm.user.email"
+                           required
+                           mongoose-error/>
+                    <p class="help-block" ng-show="form.email.$error.email && vm.submitted">
+                        Doesn't look like a valid email.
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.required && vm.submitted">
+                        What's your email address?
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.mongoose">
+                        {{ vm.errors.email }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <button class="btn btn-primary btn-lg btn-register">ثبت</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,37 +1,32 @@
-'use strict';
-
 import angular from 'angular';
+import uiRouter from 'angular-ui-router';
+import routing from './driver-register.routes';
 
-export default class SignupController {
+class DriverRegisterController {
   user = {
-    name     : '',
-    mobile   : '',
-    email    : '',
-    password : ''
+    name   : '',
+    mobile : '',
+    email  : ''
   };
-  errors = {};
-  submitted = false;
-
 
   /*@ngInject*/
-  constructor(Auth, $state) {
-    this.$http = Auth;
-    this.$state = $state;
+  constructor($http) {
+    this.$http = $http;
   }
 
   register(form) {
     this.submitted = true;
 
     if(form.$valid) {
-      return this.$http.createUser({
+      return this.$http.post('/api/users/driver', {
         name     : this.user.name,
         mobile   : this.user.mobile,
         email    : this.user.email,
-        password : this.user.password
+        password : 'zxcv123fdsa654qwer789'
       })
         .then(() => {
           // Account created, redirect to home
-          this.$state.go('main');
+          console.log('created!');
         })
         .catch(err => {
           err = err.data;
@@ -45,3 +40,12 @@ export default class SignupController {
     }
   }
 }
+
+export default angular.module('taxiApp.admin.driver.register', [uiRouter])
+  .config(routing)
+  .component('driverRegister', {
+    template     : require('./driver-register.html'),
+    controller   : DriverRegisterController,
+    controllerAs : 'vm'
+  })
+  .name;

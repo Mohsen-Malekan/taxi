@@ -2,13 +2,34 @@
 
 export default class AdminController {
   /*@ngInject*/
-  constructor(User) {
-    // Use the User $resource to fetch all users
-    this.users = User.query();
+  constructor($state) {
+    this.$state = $state;
+    // this.users = User.query();
+    this.tabs = [
+      {
+        title : 'ثبت راننده',
+        state : 'admin.driver.register',
+        icon  : 'user'
+      },
+      {
+        title : 'ثبت',
+        state : 'admin.test',
+        icon  : 'user'
+      },
+      {
+        title : 'راننده',
+        state : 'main',
+        icon  : 'user'
+      }
+    ];
   }
 
-  delete(user) {
-    user.$remove();
-    this.users.splice(this.users.indexOf(user), 1);
+  changeState(state) {
+    this.$state.go(state);
   }
+
+  // delete(user) {
+  //   user.$remove();
+  //   this.users.splice(this.users.indexOf(user), 1);
+  // }
 }

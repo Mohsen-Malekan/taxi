@@ -13,7 +13,7 @@ export default class LoginController {
 
   /*@ngInject*/
   constructor(Auth, $state) {
-    this.Auth = Auth;
+    this.$http = Auth;
     this.$state = $state;
   }
 
@@ -21,7 +21,7 @@ export default class LoginController {
     this.submitted = true;
 
     if(form.$valid) {
-      this.Auth.login({
+      this.$http.login({
         mobile   : this.user.mobile,
         password : this.user.password
       })
