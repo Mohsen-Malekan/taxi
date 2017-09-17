@@ -9,12 +9,12 @@ export default class AdminController {
       {
         title : 'ثبت راننده',
         state : 'admin.driver.register',
-        icon  : 'user'
+        icon  : 'user-plus'
       },
       {
-        title : 'ثبت',
-        state : 'admin.test',
-        icon  : 'user'
+        title : 'کاربران',
+        state : 'admin.users',
+        icon  : 'users'
       },
       {
         title : 'راننده',
