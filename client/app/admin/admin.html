@@ -2,7 +2,7 @@
     <uib-tabset active="active">
         <uib-tab ng-repeat="tab in admin.tabs" index="$index"  ng-click="admin.changeState(tab.state)">
             <uib-tab-heading>
-                <i class="glyphicon glyphicon-{{tab.icon}}"></i>
+                <i class="fa fa-{{tab.icon}}"></i>
                 {{tab.title}}
             </uib-tab-heading>
         </uib-tab>
