@@ -1,4 +1,5 @@
 'use strict';
+import angular from 'angular';
 
 export default class AdminController {
   /*@ngInject*/
@@ -13,8 +14,13 @@ export default class AdminController {
       },
       {
         title : 'کاربران',
-        state : 'admin.users',
-        icon  : 'users'
+        state : {
+          name  : 'admin.users',
+          param : {
+            type : 'user'
+          }
+        },
+        icon : 'users'
       },
       {
         title : 'راننده',
@@ -25,11 +31,11 @@ export default class AdminController {
   }
 
   changeState(state) {
-    this.$state.go(state);
+    if(angular.isString(state)) {
+      this.$state.go(state);
+    }
+    else if(angular.isObject(state)) {
+      this.$state.go(state.name, state.param);
+    }
   }
-
-  // delete(user) {
-  //   user.$remove();
-  //   this.users.splice(this.users.indexOf(user), 1);
-  // }
 }

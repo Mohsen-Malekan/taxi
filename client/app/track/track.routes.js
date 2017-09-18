@@ -6,7 +6,7 @@ export default function routes($stateProvider) {
   $stateProvider
     .state('track', {
       url      : '/track/:id',
-      template : '<track ride="$resolve.ride"/>',
+      template : '<track ride="$resolve.ride.data"/>',
       resolve  : {
         /*@ngInject*/
         ride : ($http, $stateParams) => {

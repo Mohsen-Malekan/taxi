@@ -30,33 +30,37 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  const PAGE_SIZE = 50;
-  const VALID_FIELDS = ['name', 'email', 'mobile', 'role', 'active', 'asset'];
-  let page = req.queryString.page || 0;
-  let queryParams = req.queryString.params || {};
-  queryParams = _.pick(queryParams, VALID_FIELDS);
-
-  let query = User.find(queryParams, '-salt -password');
-  query.count((err, count) => {
-    if(err) {
-      return handleError(res);
-    }
-    return query.skip(page * PAGE_SIZE).limit(PAGE_SIZE)
-      .exec()
-      .then(users => {
-        let result = {
-          users,
-          count
-        };
-        res.status(200).json(result);
-      })
-      .catch(handleError(res));
-  });
-  // return User.find({}, '-salt -password').exec()
-  //   .then(users => {
-  //     res.status(200).json(users);
-  //   })
-  //   .catch(handleError(res));
+  // const PAGE_SIZE = 50;
+  // const VALID_FIELDS = ['name', 'email', 'mobile', 'role', 'active', 'asset'];
+  // req.queryString = req.queryString || {};
+  // let page = req.queryString.page || 0;
+  // let queryParams = req.queryString.params || {};
+  // queryParams = _.pick(queryParams, VALID_FIELDS);
+  // console.log('typeof> ', typeof req.queryString);
+  // console.log('queryString> ', req.queryString);
+  // console.log('queryParams> ', queryParams);
+  //
+  // let query = User.find(queryParams, '-salt -password');
+  // query.count((err, count) => {
+  //   if(err) {
+  //     return handleError(res);
+  //   }
+  //   return query.skip(page * PAGE_SIZE).limit(PAGE_SIZE)
+  //     .exec()
+  //     .then(users => {
+  //       let result = {
+  //         users,
+  //         count
+  //       };
+  //       res.status(200).json(result);
+  //     })
+  //     .catch(handleError(res));
+  // });
+  return User.find({}, '-salt -password').exec()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(handleError(res));
 }
 
 /**
