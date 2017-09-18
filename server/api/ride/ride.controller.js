@@ -80,6 +80,13 @@ export function show(req, res) {
 }
 
 // Gets a list of user Rides from the DB
+export function userRides(req, res) {
+  return Ride.find({userId : req.params.id}).exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+// Gets a list of user Rides from the DB
 export function user(req, res) {
   let userId = req.user.id;
   return Ride.find({userId}).exec()

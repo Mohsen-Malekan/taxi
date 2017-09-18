@@ -17,7 +17,8 @@ let RideSchema = new mongoose.Schema({
   paymentMethod : String,
   rate          : Number,
   description   : String,
-  isDone        : Boolean
+  isDone        : Boolean,
+  status        : String
 });
 
 registerEvents(RideSchema);
