@@ -5,13 +5,8 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('admin.users', {
-      url          : '/users',
-      template     : '<users users="$resolve.users.data"></users>',
-      authenticate : 'admin',
-      resolve      : {
-        /*@ngInject*/
-        users : $http => $http.get('api/users')
-          .catch(() => undefined)
-      }
+      url          : '/users/{role:user|driver}',
+      template     : '<users></users>',
+      authenticate : 'admin'
     });
 }

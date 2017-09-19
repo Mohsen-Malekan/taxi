@@ -12,6 +12,7 @@
 
 import jsonpatch from 'fast-json-patch';
 import Thing from './thing.model';
+import _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;

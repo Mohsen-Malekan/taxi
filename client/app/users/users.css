@@ -1,0 +1,11 @@
+.st-sort-ascent:before {
+    font-family: 'FontAwesome';
+    content: '\f0de';
+    margin-right: 5px;
+}
+
+.st-sort-descent:before {
+    font-family: 'FontAwesome';
+    content: '\f0dd';
+    margin-right: 5px;
+}

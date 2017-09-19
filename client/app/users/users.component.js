@@ -3,9 +3,12 @@ import uiRouter from 'angular-ui-router';
 import routing from './users.routes';
 
 class UsersController {
+  users = [];
   /*@ngInject*/
-  constructor($http) {
+  constructor($http, $httpParamSerializerJQLike, $stateParams) {
     this.$http = $http;
+    this.$hps = $httpParamSerializerJQLike;
+    this.$stateParams = $stateParams;
   }
 
   $onInit() {
@@ -14,21 +17,13 @@ class UsersController {
 
   callServer(tableState) {
     this.$parent.vm.isLoading = true;
+    tableState.search = { predicateObject : { role : this.$parent.vm.$stateParams.role } };
 
-    let pagination = tableState.pagination;
-    let start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-    let number = pagination.number || 10;  // Number of entries showed per page.
-
-    this.$parent.vm.$http.get(`api/users?${tableState}`).then(result => {
-      console.log('res> ', result);
+    this.$parent.vm.$http.get(`api/users?${this.$parent.vm.$hps(tableState)}`).then(result => {
+      this.$parent.vm.users = result.data.data;
+      tableState.pagination.numberOfPages = result.data.numberOfPages;
       this.$parent.vm.isLoading = false;
     });
-
-    // service.getPage(start, number, tableState).then(result => {
-    //   this.displayed = result.data;
-    //   tableState.pagination.numberOfPages = result.numberOfPages;// set the number of pages so the pagination can update
-    //   this.isLoading = false;
-    // });
   }
 }
 
@@ -37,9 +32,6 @@ export default angular.module('taxiApp.admin.users', [uiRouter])
   .component('users', {
     template     : require('./users.html'),
     controller   : UsersController,
-    controllerAs : 'vm',
-    bindings     : {
-      users : '<'
-    }
+    controllerAs : 'vm'
   })
   .name;

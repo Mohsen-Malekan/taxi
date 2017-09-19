@@ -30,37 +30,56 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  // const PAGE_SIZE = 50;
-  // const VALID_FIELDS = ['name', 'email', 'mobile', 'role', 'active', 'asset'];
-  // req.queryString = req.queryString || {};
-  // let page = req.queryString.page || 0;
-  // let queryParams = req.queryString.params || {};
-  // queryParams = _.pick(queryParams, VALID_FIELDS);
-  // console.log('typeof> ', typeof req.queryString);
-  // console.log('queryString> ', req.queryString);
-  // console.log('queryParams> ', queryParams);
-  //
-  // let query = User.find(queryParams, '-salt -password');
-  // query.count((err, count) => {
-  //   if(err) {
-  //     return handleError(res);
-  //   }
-  //   return query.skip(page * PAGE_SIZE).limit(PAGE_SIZE)
-  //     .exec()
-  //     .then(users => {
-  //       let result = {
-  //         users,
-  //         count
-  //       };
-  //       res.status(200).json(result);
-  //     })
-  //     .catch(handleError(res));
-  // });
-  return User.find({}, '-salt -password').exec()
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(handleError(res));
+  let qs = req.query;
+  qs.pagination = qs.pagination || {};
+  qs.search = qs.search || {};
+  let sort = false;
+
+  if(_.has(qs, 'search.predicateObject')) {
+    for(let key in qs.search.predicateObject) {
+      if(qs.search.predicateObject.hasOwnProperty(key) && key !== 'role') {
+        let value = qs.search.predicateObject[key];
+        qs.search.predicateObject[key] = new RegExp(value, 'i');
+      }
+    }
+  }
+  console.log('qs.search ', qs.search);
+
+  if(_.get(qs, 'sort.predicate', false)) {
+    sort = {};
+    sort[_.get(qs, 'sort.predicate', 'name')] = _.get(qs, 'sort.reverse') === 'true' ? -1 : 1;
+  }
+
+  let query;
+  if(sort) {
+    query = User.find(qs.search.predicateObject || {}).sort(sort);
+  } else {
+    query = User.find(qs.search.predicateObject || {});
+  }
+
+  return _.clone(query).count((err, count) => {
+    if(err) {
+      handleError(res)(err);
+    }
+    return query
+      .skip(qs.pagination.start / qs.pagination.number * qs.pagination.number)
+      .limit(qs.pagination.number)
+      .exec()
+      .then(data => {
+        let result = {
+          data,
+          numberOfPages : Math.ceil(count / qs.pagination.number)
+        };
+        res.status(200).json(result);
+      })
+      .catch(handleError(res));
+  });
+
+  // return User.find({}, '-salt -password').exec()
+  //   .then(users => {
+  //     res.status(200).json(users);
+  //   })
+  //   .catch(handleError(res));
 }
 
 /**

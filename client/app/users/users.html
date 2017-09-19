@@ -3,24 +3,18 @@
         <table class="table" st-pipe="vm.callServer" st-table="vm.users">
             <thead>
             <tr>
-                <th st-sort="id">id</th>
                 <th st-sort="name">name</th>
-                <th st-sort="age">age</th>
-                <th st-sort="saved">saved people</th>
+                <th st-sort="info">info</th>
             </tr>
             <tr>
-                <th><input st-search="id"/></th>
                 <th><input st-search="name"/></th>
-                <th><input st-search="age"/></th>
-                <th><input st-search="saved"/></th>
+                <th><input st-search="info"/></th>
             </tr>
             </thead>
             <tbody ng-show="!vm.isLoading">
             <tr ng-repeat="row in vm.users">
-                <td>{{row.id}}</td>
                 <td>{{row.name}}</td>
-                <td>{{row.age}}</td>
-                <td>{{row.saved}}</td>
+                <td>{{row.info}}</td>
             </tr>
             </tbody>
             <tbody ng-show="vm.isLoading">
@@ -30,8 +24,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td class="text-center" st-pagination="" st-items-by-page="10" colspan="4">
-                </td>
+                <td class="text-center" st-pagination="" st-items-by-page="10" colspan="4"></td>
             </tr>
             </tfoot>
         </table>

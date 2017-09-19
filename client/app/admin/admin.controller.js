@@ -17,7 +17,7 @@ export default class AdminController {
         state : {
           name  : 'admin.users',
           param : {
-            type : 'user'
+            role : 'user'
           }
         },
         icon : 'users'
@@ -33,8 +33,7 @@ export default class AdminController {
   changeState(state) {
     if(angular.isString(state)) {
       this.$state.go(state);
-    }
-    else if(angular.isObject(state)) {
+    } else if(angular.isObject(state)) {
       this.$state.go(state.name, state.param);
     }
   }
