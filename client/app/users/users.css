@@ -1,3 +1,56 @@
+/*
+table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 500px; !* this can vary *!
+}
+
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+thead, tfoot {
+    flex-shrink: 0;
+}
+
+th, tbody td {
+    width: 20%; !* this can vary *!
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+tfoot {
+    display: inline-block;
+}
+
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+
+*/
 .st-sort-ascent:before {
     font-family: 'FontAwesome';
     content: '\f0de';
@@ -8,4 +61,19 @@
     font-family: 'FontAwesome';
     content: '\f0dd';
     margin-right: 5px;
+}
+
+.select-page {
+    text-align: center;
+    width: 56px;
+    display: inline;
+    padding: 5px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.pagination > li > a,
+.pagination > li > a:hover, .pagination > li > span:hover,
+.pagination > li > a:focus, .pagination > li > span:focus {
+    line-height: 34px;
 }

@@ -14,7 +14,7 @@
         <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
             <a ui-sref="{{item.state}}">{{item.title}}</a>
         </li>
-        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin.driver.register">مدیریت</a></li>
+        <li ng-show="$ctrl.isAdmin()" ui-sref-active="{'active': 'admin.**'}"><a ui-sref="admin.driver.register">مدیریت</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-left">

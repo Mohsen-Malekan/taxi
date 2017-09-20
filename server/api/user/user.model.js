@@ -31,6 +31,7 @@ let UserSchema = new Schema({
       return authTypes.indexOf(this.provider) === -1;
     }
   },
+  date           : {type : Date, default : Date.now()},
   active         : {type : Boolean, default : false},
   activationCode : String,
   lastState      : {type : String, default : '0', maxLength : 1},

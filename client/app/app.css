@@ -69,7 +69,6 @@
 
 /* Component styles are injected through gulp */
 /* inject:css */
-@import 'admin/admin.css';
 @import 'main/main.css';
 @import 'users/users.css';
 @import '../components/footer/footer.css';

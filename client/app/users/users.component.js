@@ -11,13 +11,14 @@ class UsersController {
     this.$stateParams = $stateParams;
   }
 
-  $onInit() {
-    console.log('users> ', this.users);
+  delete(user) {
+    return this.$http.delete(`api/users/${user._id}`)
+      .then(() => user.active = false);
   }
 
   callServer(tableState) {
     this.$parent.vm.isLoading = true;
-    tableState.search = { predicateObject : { role : this.$parent.vm.$stateParams.role } };
+    tableState.search = _.merge(tableState.search, { predicateObject : { role : this.$parent.vm.$stateParams.role } });
 
     this.$parent.vm.$http.get(`api/users?${this.$parent.vm.$hps(tableState)}`).then(result => {
       this.$parent.vm.users = result.data.data;

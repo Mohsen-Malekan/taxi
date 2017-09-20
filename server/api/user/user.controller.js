@@ -43,7 +43,6 @@ export function index(req, res) {
       }
     }
   }
-  console.log('qs.search ', qs.search);
 
   if(_.get(qs, 'sort.predicate', false)) {
     sort = {};
@@ -173,7 +172,8 @@ export function show(req, res, next) {
  * restriction: 'admin'
  */
 export function destroy(req, res) {
-  return User.findByIdAndRemove(req.params.id).exec()
+  return User.findByIdAndUpdate(req.params.id, {active : false}).exec()
+  // return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
       res.status(204).end();
     })

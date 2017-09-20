@@ -3,30 +3,82 @@
         <table class="table" st-pipe="vm.callServer" st-table="vm.users">
             <thead>
             <tr>
-                <th st-sort="name">name</th>
-                <th st-sort="info">info</th>
+                <th st-sort="name">نام</th>
+                <th st-sort="mobile">شماره</th>
+                <th st-sort="email">ایمیل</th>
+                <th st-sort="asset">موجودی</th>
+                <th st-sort="active">وضعیت</th>
+                <th st-sort="sharingCode">کد معرفی</th>
+                <th st-sort="challengerCode">معرفی کننده</th>
+                <th></th>
             </tr>
             <tr>
                 <th><input st-search="name"/></th>
-                <th><input st-search="info"/></th>
+                <th><input st-search="mobile"/></th>
+                <th><input st-search="email"/></th>
+                <th><input st-search="asset"/></th>
+                <th><input st-search="active"/></th>
+                <th><input st-search="sharingCode"/></th>
+                <th><input st-search="challengerCode"/></th>
+                <th></th>
             </tr>
             </thead>
             <tbody ng-show="!vm.isLoading">
             <tr ng-repeat="row in vm.users">
                 <td>{{row.name}}</td>
-                <td>{{row.info}}</td>
+                <td>{{row.mobile}}</td>
+                <td>{{row.email}}</td>
+                <td>{{row.asset}}</td>
+                <td>
+                    <i class="fa fa-check-square-o" ng-if="row.active"></i>
+                    <i class="fa fa-ban" ng-if="!row.active"></i>
+                </td>
+                <td>{{row.sharingCode}}</td>
+                <td>{{row.challengerCode}}</td>
+                <td>
+                    <button class="btn btn-xs btn-danger" ng-click="vm.delete(row)">
+                        <i class="fa fa-trash-o fa-lg"></i>
+                    </button>
+                </td>
             </tr>
             </tbody>
             <tbody ng-show="vm.isLoading">
             <tr>
-                <td colspan="4" class="text-center">Loading ...</td>
+                <td colspan="8" class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                    <span class="sr-only">درحال پردازش...</span>
+                </td>
             </tr>
             </tbody>
             <tfoot>
             <tr>
-                <td class="text-center" st-pagination="" st-items-by-page="10" colspan="4"></td>
+                <td colspan="8" class="text-center" st-pagination="" st-displayed-pages="" st-items-by-page="40"
+                    st-template="pagination.html"></td>
             </tr>
             </tfoot>
         </table>
     </div>
 </div>
+<script type="text/ng-template" id="pagination.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li>
+                <a ng-click="selectPage(1)">اول</a>
+            </li>
+            <li>
+                <a ng-click="selectPage(currentPage - 1)">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+            <li>
+                <a> صفحه <page-select></page-select> از {{numPages}} </a>
+            </li>
+            <li>
+                <a ng-click="selectPage(currentPage + 1)">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">آخر</a></li>
+        </ul>
+    </nav>
+</script>

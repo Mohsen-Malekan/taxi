@@ -9,6 +9,7 @@ import ngSanitize from 'angular-sanitize';
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
 import 'angular-validation-match';
+import loadingBar from 'angular-loading-bar';
 
 import {
   routeConfig
@@ -18,6 +19,7 @@ import _Auth from '../components/auth/auth.module';
 import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
+import pagination from '../components/pagination/pagination.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import track from './track/track.component';
@@ -26,8 +28,8 @@ import util from '../components/util/util.module';
 
 import './app.css';
 
-angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, _Auth, account,
-  admin, 'validation.match', navbar, footer, main, constants, util, track
+angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, loadingBar, _Auth, account,
+  admin, 'validation.match', navbar, pagination, footer, main, constants, util, track
 ])
   .config(routeConfig)
   .directive('mongooseError', function() {
