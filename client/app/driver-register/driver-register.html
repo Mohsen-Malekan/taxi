@@ -1,53 +1,71 @@
 <div class="row">
     <div class="col-sm-12">
-        <h1>ثبت نام راننده</h1>
-    </div>
-    <div class="col-sm-12">
         <form class="form" name="form" ng-submit="vm.register(form)" novalidate>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
                                             'has-error': form.name.$invalid && vm.submitted }">
                     <label>نام</label>
 
-                    <input type="text" name="name" class="form-control" ng-model="vm.user.name"
+                    <input name="name" class="form-control" ng-model="vm.user.name"
                            required/>
                     <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
-                        A name is required
+                        نام را وارد کنید
                     </p>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group" ng-class="{ 'has-success': form.mobile.$valid && vm.submitted,
                                             'has-error': form.mobile.$invalid && vm.submitted }">
                     <label>شماره موبایل</label>
 
-                    <input type="text" name="mobile" class="form-control" ng-model="vm.user.mobile"
+                    <input name="mobile" class="form-control" ng-model="vm.user.mobile"
+                           style="direction: ltr"
                            required
                            mongoose-error/>
-                    <p class="help-block" ng-show="form.mobile.$error.email && vm.submitted">
-                        Doesn't look like a valid mobile.
+                    <p class="help-block" ng-show="form.mobile.$error.mobile && vm.submitted">
+                        شماره همراه نامعتبر است
                     </p>
                     <p class="help-block" ng-show="form.mobile.$error.required && vm.submitted">
-                        What's your mobile number?
+                        شماره همراه را وارد کنید
                     </p>
                     <p class="help-block" ng-show="form.mobile.$error.mongoose">
                         {{ vm.errors.mobile }}
                     </p>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
+                <div class="form-group" ng-class="{ 'has-success': form.nationalCode.$valid && vm.submitted, 'has-error': form.nationalCode.$invalid && vm.submitted }">
+                    <label>کد ملی</label>
+
+                    <input name="nationalCode" class="form-control" ng-model="vm.user.nationalCode"
+                           style="direction: ltr"
+                           required
+                           mongoose-error/>
+                    <p class="help-block" ng-show="form.nationalCode.$error.nationalCode && vm.submitted">
+                        کد ملی نامعتبر است
+                    </p>
+                    <p class="help-block" ng-show="form.nationalCode.$error.required && vm.submitted">
+                        کد ملی را وارد کنید
+                    </p>
+                    <p class="help-block" ng-show="form.nationalCode.$error.mongoose">
+                        {{ vm.errors.nationalCode }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-3">
                 <div class="form-group" ng-class="{ 'has-success': form.email.$valid && vm.submitted,
                                             'has-error': form.email.$invalid && vm.submitted }">
                     <label>رایانامه</label>
 
                     <input type="email" name="email" class="form-control" ng-model="vm.user.email"
+                           style="direction: ltr"
                            required
                            mongoose-error/>
                     <p class="help-block" ng-show="form.email.$error.email && vm.submitted">
-                        Doesn't look like a valid email.
+                        رایانامه نامعتبر است
                     </p>
                     <p class="help-block" ng-show="form.email.$error.required && vm.submitted">
-                        What's your email address?
+رایانامه را وارد کنید
                     </p>
                     <p class="help-block" ng-show="form.email.$error.mongoose">
                         {{ vm.errors.email }}

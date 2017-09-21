@@ -21,6 +21,10 @@ let UserSchema = new Schema({
     lowercase : true,
     required  : true
   },
+  nationalCode : {
+    type     : String,
+    required : false
+  },
   role : {
     type    : String,
     default : 'user'
@@ -108,6 +112,13 @@ UserSchema
     return mobile.length;
   }, 'شماره موبایل را وارد کنید');
 
+// Validate empty nationalCode
+UserSchema
+  .path('nationalCode')
+  .validate(function(nationalCode) {
+    return nationalCode.length;
+  }, 'کد ملی را وارد کنید');
+
 // Validate email is not taken
 UserSchema
   .path('email')
@@ -143,6 +154,22 @@ UserSchema
         throw err;
       });
   }, 'شماره موبایل تکراری است.');
+
+// Validate nationalCode is not taken
+UserSchema
+  .path('nationalCode')
+  .validate(function(value) {
+    return this.constructor.findOne({ nationalCode : value }).exec()
+      .then(user => {
+        if(user) {
+          return this.id === user.id;
+        }
+        return true;
+      })
+      .catch(function(err) {
+        throw err;
+      });
+  }, 'کد ملی تکراری است.');
 
 // Validate sharingCode is not taken
 UserSchema

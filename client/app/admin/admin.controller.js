@@ -10,7 +10,7 @@ export default class AdminController {
       {
         title : 'ثبت راننده',
         state : 'admin.driver.register',
-        icon  : 'user-plus',
+        icon  : 'fa fa-user-plus',
         url   : '/admin/driver/register'
       },
       {
@@ -21,7 +21,7 @@ export default class AdminController {
             role : 'user'
           }
         },
-        icon : 'users',
+        icon : 'fa fa-users',
         url  : '/admin/users/user'
       },
       {
@@ -32,8 +32,14 @@ export default class AdminController {
             role : 'driver'
           }
         },
-        icon : 'users',
+        icon : 'fa fa-taxi',
         url  : '/admin/users/driver'
+      },
+      {
+        title : 'گزارشات',
+        state : 'admin.reports',
+        icon  : 'fa fa-database',
+        url   : '/admin/reports'
       }
     ];
   }

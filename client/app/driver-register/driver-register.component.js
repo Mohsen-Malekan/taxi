@@ -4,9 +4,10 @@ import routing from './driver-register.routes';
 
 class DriverRegisterController {
   user = {
-    name   : '',
-    mobile : '',
-    email  : ''
+    name         : '',
+    mobile       : '',
+    nationalCode : '',
+    email        : ''
   };
 
   /*@ngInject*/
@@ -19,14 +20,23 @@ class DriverRegisterController {
 
     if(form.$valid) {
       return this.$http.post('/api/users/driver', {
-        name     : this.user.name,
-        mobile   : this.user.mobile,
-        email    : this.user.email,
-        password : 'zxcv123fdsa654qwer789'
+        name         : this.user.name,
+        mobile       : this.user.mobile,
+        nationalCode : this.user.nationalCode,
+        email        : this.user.email,
+        password     : 'zxcv123fdsa654qwer789'
       })
         .then(() => {
           // Account created, redirect to home
           console.log('created!');
+          this.user = {
+            name         : '',
+            mobile       : '',
+            nationalCode : '',
+            email        : ''
+          };
+          this.submitted = false;
+          form.$setPristine();
         })
         .catch(err => {
           err = err.data;
