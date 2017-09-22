@@ -11,9 +11,14 @@ class UsersController {
     this.$stateParams = $stateParams;
   }
 
+  toggleActivation(user) {
+    return this.$http.get(`api/users/toggleActivation/${user._id}`);
+      // .then(() => user.active = !user.active);
+  }
+
   delete(user) {
     return this.$http.delete(`api/users/${user._id}`)
-      .then(() => user.active = false);
+    .then(() => this.users.splice(this.users.indexOf(user)));
   }
 
   callServer(tableState) {

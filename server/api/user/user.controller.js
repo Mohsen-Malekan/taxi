@@ -62,7 +62,7 @@ export function index(req, res) {
     }
     return query
       .skip(qs.pagination.start / qs.pagination.number * qs.pagination.number)
-      .limit(qs.pagination.number)
+      .limit(Number(qs.pagination.number))
       .exec()
       .then(data => {
         let result = {
@@ -79,6 +79,18 @@ export function index(req, res) {
   //     res.status(200).json(users);
   //   })
   //   .catch(handleError(res));
+}
+
+/**
+ * toggle user activation
+ * restriction: 'admin'
+ */
+export function toggleActivation(req, res) {
+  return User.findByIdAndToggle(req.params.id)
+    .then(function() {
+      res.status(204).end();
+    })
+    .catch(handleError(res));
 }
 
 /**
@@ -172,8 +184,7 @@ export function show(req, res, next) {
  * restriction: 'admin'
  */
 export function destroy(req, res) {
-  return User.findByIdAndUpdate(req.params.id, {active : false}).exec()
-  // return User.findByIdAndRemove(req.params.id).exec()
+  return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
       res.status(204).end();
     })

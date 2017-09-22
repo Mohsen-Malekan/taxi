@@ -10,6 +10,7 @@ import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
 import 'angular-validation-match';
 import loadingBar from 'angular-loading-bar';
+import 'angular-ui-switch/angular-ui-switch.min';
 
 import {
   routeConfig
@@ -28,7 +29,7 @@ import util from '../components/util/util.module';
 
 import './app.css';
 
-angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, loadingBar, _Auth, account,
+angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, loadingBar, 'uiSwitch', _Auth, account,
   admin, 'validation.match', navbar, pagination, footer, main, constants, util, track
 ])
   .config(routeConfig)

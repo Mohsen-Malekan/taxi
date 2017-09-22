@@ -77,3 +77,19 @@ tfoot td {
 .pagination > li > a:focus, .pagination > li > span:focus {
     line-height: 34px;
 }
+
+.switch {
+    width: 30px;
+    height: 20px;
+    display: flex;
+}
+.switch small {
+    width: 20px;
+    height: 20px;
+}
+.switch.checked {
+    /* frame when enabled */
+}
+.switch.checked small {
+    left: 11px;
+}

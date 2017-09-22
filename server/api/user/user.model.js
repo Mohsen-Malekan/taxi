@@ -8,47 +8,47 @@ import {registerEvents} from './user.events';
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 let UserSchema = new Schema({
-  name  : String,
-  email : {
-    type      : String,
-    lowercase : true,
+  name: String,
+  email: {
+    type: String,
+    lowercase: true,
     required() {
       return authTypes.indexOf(this.provider) === -1;
     }
   },
-  mobile : {
-    type      : String,
-    lowercase : true,
-    required  : true
+  mobile: {
+    type: String,
+    lowercase: true,
+    required: true
   },
-  nationalCode : {
-    type     : String,
-    required : false
+  nationalCode: {
+    type: String,
+    required: false
   },
-  role : {
-    type    : String,
-    default : 'user'
+  role: {
+    type: String,
+    default: 'user'
   },
-  password : {
-    type : String,
+  password: {
+    type: String,
     required() {
       return authTypes.indexOf(this.provider) === -1;
     }
   },
-  date           : {type : Date, default : Date.now()},
-  active         : {type : Boolean, default : false},
-  activationCode : String,
-  lastState      : {type : String, default : '0', maxLength : 1},
-  lastLat        : {type : Number, default : 0},
-  lastLng        : {type : Number, default : 0},
-  asset          : {type : Number, default : 0},
-  sharingCode    : String,
-  challengerCode : String,
-  lastLogin      : String,
-  provider       : String,
-  salt           : String,
-  google         : {},
-  github         : {}
+  date: {type: Date, default: Date.now()},
+  active: {type: Boolean, default: false},
+  activationCode: String,
+  lastState: {type: String, default: '0', maxLength: 1},
+  lastLat: {type: Number, default: 0},
+  lastLng: {type: Number, default: 0},
+  asset: {type: Number, default: 0},
+  sharingCode: String,
+  challengerCode: String,
+  lastLogin: String,
+  provider: String,
+  salt: String,
+  google: {},
+  github: {}
 });
 
 /**
@@ -60,8 +60,8 @@ UserSchema
   .virtual('profile')
   .get(function() {
     return {
-      name : this.name,
-      role : this.role
+      name: this.name,
+      role: this.role
     };
   });
 
@@ -76,8 +76,8 @@ UserSchema
   .virtual('token')
   .get(function() {
     return {
-      _id  : this._id,
-      role : this.role
+      _id: this._id,
+      role: this.role
     };
   });
 
@@ -127,7 +127,7 @@ UserSchema
       return true;
     }
 
-    return this.constructor.findOne({ email : value }).exec()
+    return this.constructor.findOne({ email: value }).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -143,7 +143,7 @@ UserSchema
 UserSchema
   .path('mobile')
   .validate(function(value) {
-    return this.constructor.findOne({ mobile : value }).exec()
+    return this.constructor.findOne({ mobile: value }).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -159,7 +159,7 @@ UserSchema
 UserSchema
   .path('nationalCode')
   .validate(function(value) {
-    return this.constructor.findOne({ nationalCode : value }).exec()
+    return this.constructor.findOne({ nationalCode: value }).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -175,7 +175,7 @@ UserSchema
 UserSchema
   .path('sharingCode')
   .validate(function(value) {
-    return this.constructor.findOne({ sharingCode : value }).exec()
+    return this.constructor.findOne({ sharingCode: value }).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -334,6 +334,14 @@ UserSchema.methods = {
         }
       });
   }
+};
+
+UserSchema.statics.findByIdAndToggle = function(id) {
+  return this.findById(id).exec()
+    .then(user => {
+      user.active = !user.active;
+      return user.save();
+    });
 };
 
 registerEvents(UserSchema);

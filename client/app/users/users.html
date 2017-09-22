@@ -30,8 +30,7 @@
                 <td>{{row.email}}</td>
                 <td>{{row.asset}}</td>
                 <td>
-                    <i class="fa fa-check-square-o" ng-if="row.active"></i>
-                    <i class="fa fa-ban" ng-if="!row.active"></i>
+                    <switch id="enabled" name="enabled" ng-model="row.active" ng-change="vm.toggleActivation(row)"></switch>
                 </td>
                 <td>{{row.sharingCode}}</td>
                 <td>{{row.challengerCode}}</td>
