@@ -1,9 +1,28 @@
 <div>
     <uib-tabset active="admin.active">
-        <uib-tab ng-repeat="tab in admin.tabs" index="$index" ng-click="admin.changeState(tab.state)">
+        <uib-tab index="$index" ng-repeat="tab in admin.tabs" ng-click="admin.changeState(tab.state)">
             <uib-tab-heading>
                 <i class="{{tab.icon}}"></i>
                 {{tab.title}}
+            </uib-tab-heading>
+        </uib-tab>
+        <uib-tab index="4">
+            <uib-tab-heading>
+                <div class="btn-group" uib-dropdown>
+                    <span uib-dropdown-toggle>
+                        <i class="fa fa-database"></i>
+                        <a>انتخاب گزارش</a>
+                        <span class="caret"></span>
+                    </span>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                        <li role="menuitem" ng-click="admin.changeState2('admin.reports', 'done')">
+                            <a ui-sref="admin.reports({type: 'done'})">سفرهای انجام شده</a></li>
+                        <li role="menuitem"><a href="#">Another action</a></li>
+                        <li role="menuitem"><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem"><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
             </uib-tab-heading>
         </uib-tab>
     </uib-tabset>

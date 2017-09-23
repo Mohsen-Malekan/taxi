@@ -36,17 +36,18 @@ export default class AdminController {
         url  : '/admin/users/driver'
       },
       {
-        title : 'گزارشات',
-        state : 'admin.reports',
-        icon  : 'fa fa-database',
-        url   : '/admin/reports'
+        title : 'اعلان ها',
+        state : 'admin.notifications',
+        icon  : 'fa fa-bell',
+        url   : '/admin/notifications'
       }
     ];
   }
 
   $onInit() {
     let url = this.$state.href(this.$state.current.name, this.$state.params);
-    this.active = _.findIndex(this.tabs, {url});
+    let index = _.findIndex(this.tabs, {url});
+    this.active = index === -1 ? 4 : index;
   }
 
   changeState(state) {
@@ -55,5 +56,9 @@ export default class AdminController {
     } else if(angular.isObject(state)) {
       this.$state.go(state.name, state.param);
     }
+  }
+
+  changeState2(state, type) {
+    this.$state.go(state, {type});
   }
 }

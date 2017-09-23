@@ -12,6 +12,7 @@
 
 import jsonpatch from 'fast-json-patch';
 import Ride from './ride.model';
+import _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -66,9 +67,53 @@ function handleError(res, statusCode) {
 
 // Gets a list of Rides
 export function index(req, res) {
-  return Ride.find().exec()
-    .then(respondWithResult(res))
-    .catch(handleError(res));
+  let qs = req.query;
+  qs.pagination = qs.pagination || {};
+  qs.search = qs.search || {};
+  let sort = false;
+
+  if(_.has(qs, 'search.predicateObject')) {
+    for(let key in qs.search.predicateObject) {
+      if(qs.search.predicateObject.hasOwnProperty(key)) {
+        let value = qs.search.predicateObject[key];
+        qs.search.predicateObject[key] = new RegExp(value, 'i');
+      }
+    }
+  }
+
+  if(_.get(qs, 'sort.predicate', false)) {
+    sort = {};
+    sort[_.get(qs, 'sort.predicate', 'name')] = _.get(qs, 'sort.reverse') === 'true' ? -1 : 1;
+  }
+
+  let query;
+  if(sort) {
+    query = Ride.find(qs.search.predicateObject || {}, '-salt -password').sort(sort);
+  } else {
+    query = Ride.find(qs.search.predicateObject || {}, '-salt -password');
+  }
+
+  return _.clone(query).count((err, count) => {
+    if(err) {
+      handleError(res)(err);
+    }
+    return query
+      .skip(qs.pagination.start / qs.pagination.number * qs.pagination.number)
+      .limit(Number(qs.pagination.number))
+      .exec()
+      .then(data => {
+        let result = {
+          data,
+          numberOfPages : Math.ceil(count / qs.pagination.number)
+        };
+        res.status(200).json(result);
+      })
+      .catch(handleError(res));
+  });
+
+  // return Ride.find().exec()
+  //   .then(respondWithResult(res))
+  //   .catch(handleError(res));
 }
 
 // Gets a single Ride from the DB

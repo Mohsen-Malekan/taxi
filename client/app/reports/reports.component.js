@@ -1,11 +1,28 @@
+'ngInject';
+
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './reports.routes';
 
 class ReportsController {
   /*@ngInject*/
-  constructor($http) {
+  constructor($http, $httpParamSerializerJQLike, $stateParams) {
     this.$http = $http;
+    this.$hps = $httpParamSerializerJQLike;
+    this.$stateParams = $stateParams;
+  }
+
+  $onInit() {}
+
+  callServer(tableState) {
+    this.$parent.vm.isLoading = true;
+    tableState.search = _.merge(tableState.search, { predicateObject : { isDone : true } });
+
+    this.$parent.vm.$http.get(`api/rides?${this.$parent.vm.$hps(tableState)}`).then(result => {
+      this.$parent.vm.users = result.data.data;
+      tableState.pagination.numberOfPages = result.data.numberOfPages;
+      this.$parent.vm.isLoading = false;
+    });
   }
 }
 

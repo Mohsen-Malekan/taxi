@@ -51,9 +51,9 @@ export function index(req, res) {
 
   let query;
   if(sort) {
-    query = User.find(qs.search.predicateObject || {}).sort(sort);
+    query = User.find(qs.search.predicateObject || {}, '-salt -password').sort(sort);
   } else {
-    query = User.find(qs.search.predicateObject || {});
+    query = User.find(qs.search.predicateObject || {}, '-salt -password');
   }
 
   return _.clone(query).count((err, count) => {
