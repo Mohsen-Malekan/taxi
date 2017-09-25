@@ -1,39 +1,47 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './driver-register.routes';
+import ngFileUpload from 'ng-file-upload';
 
 class DriverRegisterController {
   user = {
     name         : '',
     mobile       : '',
     nationalCode : '',
-    email        : ''
+    email        : '',
+    photos       : []
   };
 
   /*@ngInject*/
-  constructor($http) {
+  constructor($http, Upload) {
     this.$http = $http;
+    this.Upload = Upload;
   }
 
   register(form) {
     this.submitted = true;
+    let data = {
+      name         : this.user.name,
+      mobile       : this.user.mobile,
+      nationalCode : this.user.nationalCode,
+      email        : this.user.email,
+      photos       : this.user.photos,
+      password     : 'zxcv123fdsa654qwer789'
+    };
 
     if(form.$valid) {
-      return this.$http.post('/api/users/driver', {
-        name         : this.user.name,
-        mobile       : this.user.mobile,
-        nationalCode : this.user.nationalCode,
-        email        : this.user.email,
-        password     : 'zxcv123fdsa654qwer789'
+      this.Upload.upload({
+        url : 'api/users/driver',
+        data,
       })
         .then(() => {
-          // Account created, redirect to home
           console.log('created!');
           this.user = {
             name         : '',
             mobile       : '',
             nationalCode : '',
-            email        : ''
+            email        : '',
+            photos       : []
           };
           this.submitted = false;
           form.$setPristine();
@@ -51,7 +59,7 @@ class DriverRegisterController {
   }
 }
 
-export default angular.module('taxiApp.admin.driver.register', [uiRouter])
+export default angular.module('taxiApp.admin.driver.register', [uiRouter, ngFileUpload])
   .config(routing)
   .component('driverRegister', {
     template     : require('./driver-register.html'),

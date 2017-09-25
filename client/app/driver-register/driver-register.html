@@ -34,7 +34,8 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <div class="form-group" ng-class="{ 'has-success': form.nationalCode.$valid && vm.submitted, 'has-error': form.nationalCode.$invalid && vm.submitted }">
+                <div class="form-group"
+                     ng-class="{ 'has-success': form.nationalCode.$valid && vm.submitted, 'has-error': form.nationalCode.$invalid && vm.submitted }">
                     <label>کد ملی</label>
 
                     <input name="nationalCode" class="form-control" ng-model="vm.user.nationalCode"
@@ -65,11 +66,39 @@
                         رایانامه نامعتبر است
                     </p>
                     <p class="help-block" ng-show="form.email.$error.required && vm.submitted">
-رایانامه را وارد کنید
+                        رایانامه را وارد کنید
                     </p>
                     <p class="help-block" ng-show="form.email.$error.mongoose">
                         {{ vm.errors.email }}
                     </p>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img ng-show="vm.user.photos[0]" ngf-thumbnail="vm.user.photos[0]" alt="driver-profile-picture">
+                    <img ng-hide="vm.user.photos[0]" ng-src="/assets/images/default_user.jpg" alt="drefault-profile-picture">
+                    <div class="caption">
+                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد کنید</p>
+                        <div>
+                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[0]" name="photos" ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب</div>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[0] = null">حذف</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img ng-show="vm.user.photos[1]" ngf-thumbnail="vm.user.photos[1]" alt="driver-profile-picture">
+                    <img ng-hide="vm.user.photos[1]" ng-src="/assets/images/default_user.jpg" alt="drefault-profile-picture">
+                    <div class="caption">
+                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد کنید</p>
+                        <div>
+                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[1]" name="photos" ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب</div>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[1] = null">حذف</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12">

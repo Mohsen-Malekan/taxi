@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import randomstring from 'randomstring';
 import request from 'request';
 import _ from 'lodash';
+import fs from 'fs';
 
 const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
 
@@ -134,6 +135,7 @@ export function create(req, res) {
  */
 export function createDriver(req, res) {
   const DEFAULT_PASS = 'zxcv123fdsa654qwer789';
+  console.log('>>>req.files: ', req.files);
   let newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'driver';
