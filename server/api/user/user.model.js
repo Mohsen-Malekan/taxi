@@ -12,9 +12,7 @@ let UserSchema = new Schema({
   email: {
     type: String,
     lowercase: true,
-    required() {
-      return authTypes.indexOf(this.provider) === -1;
-    }
+    required: false
   },
   mobile: {
     type: String,
@@ -44,7 +42,6 @@ let UserSchema = new Schema({
   asset: {type: Number, default: 0},
   sharingCode: String,
   challengerCode: String,
-  lastLogin: String,
   provider: String,
   salt: String,
   google: {},
@@ -86,14 +83,14 @@ UserSchema
  */
 
 // Validate empty email
-UserSchema
-  .path('email')
-  .validate(function(email) {
-    if(authTypes.indexOf(this.provider) !== -1) {
-      return true;
-    }
-    return email.length;
-  }, 'رایانامه را وارد کنید');
+// UserSchema
+//   .path('email')
+//   .validate(function(email) {
+//     if(authTypes.indexOf(this.provider) !== -1) {
+//       return true;
+//     }
+//     return email.length;
+//   }, 'رایانامه را وارد کنید');
 
 // Validate empty password
 UserSchema
@@ -113,17 +110,20 @@ UserSchema
   }, 'شماره موبایل را وارد کنید');
 
 // Validate empty nationalCode
-UserSchema
-  .path('nationalCode')
-  .validate(function(nationalCode) {
-    return nationalCode.length;
-  }, 'کد ملی را وارد کنید');
+// UserSchema
+//   .path('nationalCode')
+//   .validate(function(nationalCode) {
+//     return nationalCode.length;
+//   }, 'کد ملی را وارد کنید');
 
 // Validate email is not taken
 UserSchema
   .path('email')
   .validate(function(value) {
     if(authTypes.indexOf(this.provider) !== -1) {
+      return true;
+    }
+    if(!this.email) {
       return true;
     }
 
@@ -159,6 +159,9 @@ UserSchema
 UserSchema
   .path('nationalCode')
   .validate(function(value) {
+    if(!this.nationalCode) {
+      return true;
+    }
     return this.constructor.findOne({ nationalCode: value }).exec()
       .then(user => {
         if(user) {

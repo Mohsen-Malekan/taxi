@@ -5,10 +5,21 @@ import routing from './users.routes';
 class UsersController {
   users = [];
   /*@ngInject*/
-  constructor($http, $httpParamSerializerJQLike, $stateParams) {
+  constructor($http, $httpParamSerializerJQLike, $stateParams, $state, Auth) {
     this.$http = $http;
     this.$hps = $httpParamSerializerJQLike;
     this.$stateParams = $stateParams;
+    this.Auth = Auth;
+    this.$state = $state;
+  }
+
+  $onInit() {
+    this.Auth.hasRole('sysAdmin')
+      .then(has => {
+        if(this.$stateParams.role === 'admin' && !has) {
+          return this.$state.go('main');
+        }
+      });
   }
 
   toggleActivation(user) {

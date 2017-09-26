@@ -1,12 +1,14 @@
 <div>
     <uib-tabset active="admin.active">
-        <uib-tab index="$index" ng-repeat="tab in admin.tabs" ng-click="admin.changeState(tab.state)">
+        <uib-tab index="$index" ng-repeat="tab in admin.tabs"
+                 ng-if="admin.roleIndex >= (tab.roleIndex || 3)"
+                 ng-click="admin.changeState(tab.state)">
             <uib-tab-heading>
                 <i class="{{tab.icon}}"></i>
                 {{tab.title}}
             </uib-tab-heading>
         </uib-tab>
-        <uib-tab index="4">
+        <uib-tab index="admin.tabs.length">
             <uib-tab-heading>
                 <div class="btn-group" uib-dropdown>
                     <span uib-dropdown-toggle>

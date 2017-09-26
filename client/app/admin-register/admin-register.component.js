@@ -1,8 +1,9 @@
-'use strict';
-
 import angular from 'angular';
+import uiRouter from 'angular-ui-router';
+import routing from './admin-register.routes';
+import ngFileUpload from 'ng-file-upload';
 
-export default class SignupController {
+class AdminRegisterController {
   user = {
     name     : '',
     mobile   : '',
@@ -10,6 +11,7 @@ export default class SignupController {
   };
   errors = {};
   submitted = false;
+  test = '';
 
 
   /*@ngInject*/
@@ -25,11 +27,15 @@ export default class SignupController {
       return this.$http.createUser({
         name     : this.user.name,
         mobile   : this.user.mobile,
-        password : this.user.password
+        password : this.user.password,
+        role     : 'admin'
       })
         .then(() => {
-          // Account created, redirect to home
-          this.$state.go('main');
+          this.user = {
+            name     : '',
+            mobile   : '',
+            password : ''
+          };
         })
         .catch(err => {
           err = err.data;
@@ -43,3 +49,12 @@ export default class SignupController {
     }
   }
 }
+
+export default angular.module('taxiApp.admin.register', [uiRouter])
+  .config(routing)
+  .component('adminRegister', {
+    template     : require('./admin-register.html'),
+    controller   : AdminRegisterController,
+    controllerAs : 'vm'
+  })
+  .name;

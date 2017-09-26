@@ -28,7 +28,7 @@ export default function routes($stateProvider) {
       controllerAs : 'vm'
     })
     .state('settings', {
-      url          : 'settings',
+      url          : '/settings',
       template     : require('./settings/settings.html'),
       controller   : 'SettingsController',
       controllerAs : 'vm',
