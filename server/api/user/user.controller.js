@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import randomstring from 'randomstring';
 import request from 'request';
 import _ from 'lodash';
+import path from 'path';
 import fs from 'fs';
 
 const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
@@ -135,7 +136,6 @@ export function create(req, res) {
  */
 export function createDriver(req, res) {
   const DEFAULT_PASS = 'zxcv123fdsa654qwer789';
-  console.log('>>>req.files: ', req.files);
   let newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'driver';
@@ -144,7 +144,58 @@ export function createDriver(req, res) {
   newUser.active = true;
   newUser.password = DEFAULT_PASS;
   newUser.save()
+    .then(user =>
+      _.forEach(req.files, (val, key) => {
+        let file = val[0];
+        let tempPath = file.path;
+        let ext = _.last(_.split(file.originalname, '.'));
+        let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${key}.${ext}`);
+        return fs.rename(tempPath, targetPath, function(err) {
+          if(err) return handleError(res)(err);
+          return fs.unlink(tempPath, function() {
+            if(err) return handleError(res)(err);
+            return user;
+          });
+        });
+      }))
+    .then(user => {
+      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
+        expiresIn : 60 * 60 * 5
+      });
+      let userInfo = _.pick(user, [
+        'name',
+        'email',
+        'mobile',
+        'role',
+        'active',
+        'lastState',
+        'lastLat',
+        'lastLng',
+        'asset',
+        'sharingCode']);
+      userInfo.id = user._id;
+      res.json({ token, user : userInfo });
+    })
+    .catch(validationError(res));
+}
+
+/**
+ * Creates a new user with role='admin'
+ */
+export function createAdmin(req, res) {
+  let newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.role = 'admin';
+  newUser.active = true;
+  newUser.sharingCode = randomstring.generate(6).toUpperCase();
+  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.save()
     .then(function(user) {
+      // send activationCode to user
+      // request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (error, response, body) => {
+      //   console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+      //   console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
+      // });
       let token = jwt.sign({ _id : user._id }, config.secrets.session, {
         expiresIn : 60 * 60 * 5
       });

@@ -45,20 +45,22 @@ export default function seedDatabaseIfNeeded() {
       .then(() => console.log('finished populating things'))
       .catch(err => console.log('error populating things', err));*/
 
-    User.find({role: config.userRoles[config.userRoles.length - 1]}).remove()
-      .then(() => {
-        User.create({
-          provider: 'local',
-          name: 'sysAdmin',
-          email: 'sys.admin@mail.com',
-          mobile: '09363261694',
-          nationalCode: '0946428611',
-          password: 'zaq1`xsw21',
-          role: config.userRoles[config.userRoles.length - 1],
-          active: true
-        })
+    User.find({role : config.userRoles[config.userRoles.length - 1]})
+      .then(users => {
+        if(!users || !users.length) {
+          User.create({
+            provider     : 'local',
+            name         : 'sysAdmin',
+            email        : 'sys.admin@mail.com',
+            mobile       : '09363261694',
+            nationalCode : '0946428611',
+            password     : 'zaq1`xsw21',
+            role         : config.userRoles[config.userRoles.length - 1],
+            active       : true
+          });
+        }
+      })
         .then(() => console.log('user \'sysAdmin\' added'))
         .catch(err => console.log('error adding user \'sysAdmin\'', err));
-      });
   }
 }

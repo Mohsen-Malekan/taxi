@@ -22,6 +22,7 @@
           <label>همراه</label>
 
           <input type="text" name="mobile" class="form-control" ng-model="vm.user.mobile"
+                 style="direction: ltr"
                  required
                  mongoose-error/>
           <p class="help-block" ng-show="form.mobile.$error.mobile && vm.submitted">
@@ -41,6 +42,7 @@
 
           <input type="password" name="password" class="form-control" ng-model="vm.user.password"
                  ng-minlength="3"
+                 style="direction: ltr"
                  required
                  mongoose-error/>
           <p class="help-block"
@@ -56,6 +58,7 @@
                                             'has-error': form.confirmPassword.$invalid && vm.submitted }">
           <label>تکرار گذرواره</label>
           <input type="password" name="confirmPassword" class="form-control" ng-model="vm.user.confirmPassword"
+                 style="direction: ltr"
                  match="vm.user.password"
                  ng-minlength="3" required/>
           <p class="help-block"

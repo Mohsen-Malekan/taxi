@@ -15,8 +15,8 @@ class AdminRegisterController {
 
 
   /*@ngInject*/
-  constructor(Auth, $state) {
-    this.$http = Auth;
+  constructor($http, $state) {
+    this.$http = $http;
     this.$state = $state;
   }
 
@@ -24,13 +24,10 @@ class AdminRegisterController {
     this.submitted = true;
 
     if(form.$valid) {
-      return this.$http.createUser({
-        name     : this.user.name,
-        mobile   : this.user.mobile,
-        password : this.user.password,
-        role     : 'admin'
-      })
+      return this.$http.post('api/users/admin', this.user)
         .then(() => {
+          this.submitted = false;
+          form.$setPristine();
           this.user = {
             name     : '',
             mobile   : '',
