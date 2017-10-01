@@ -5,30 +5,30 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var favoriteCtrlStub = {
-  index   : 'favoriteCtrl.index',
-  show    : 'favoriteCtrl.show',
-  create  : 'favoriteCtrl.create',
-  upsert  : 'favoriteCtrl.upsert',
-  patch   : 'favoriteCtrl.patch',
-  destroy : 'favoriteCtrl.destroy'
+  index: 'favoriteCtrl.index',
+  show: 'favoriteCtrl.show',
+  create: 'favoriteCtrl.create',
+  upsert: 'favoriteCtrl.upsert',
+  patch: 'favoriteCtrl.patch',
+  destroy: 'favoriteCtrl.destroy'
 };
 
 var routerStub = {
-  get    : sinon.spy(),
-  put    : sinon.spy(),
-  patch  : sinon.spy(),
-  post   : sinon.spy(),
-  delete : sinon.spy()
+  get: sinon.spy(),
+  put: sinon.spy(),
+  patch: sinon.spy(),
+  post: sinon.spy(),
+  delete: sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var favoriteIndex = proxyquire('./index.js', {
-  express : {
+  express: {
     Router() {
       return routerStub;
     }
   },
-  './favorite.controller' : favoriteCtrlStub
+  './favorite.controller': favoriteCtrlStub
 });
 
 describe('Favorite API Router:', function() {
@@ -40,7 +40,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.index', function() {
       expect(routerStub.get
         .withArgs('/', 'favoriteCtrl.index')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -48,7 +48,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.show', function() {
       expect(routerStub.get
         .withArgs('/:id', 'favoriteCtrl.show')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -56,7 +56,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.create', function() {
       expect(routerStub.post
         .withArgs('/', 'favoriteCtrl.create')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -64,7 +64,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.upsert', function() {
       expect(routerStub.put
         .withArgs('/:id', 'favoriteCtrl.upsert')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -72,7 +72,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.patch', function() {
       expect(routerStub.patch
         .withArgs('/:id', 'favoriteCtrl.patch')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -80,7 +80,7 @@ describe('Favorite API Router:', function() {
     it('should route to favorite.controller.destroy', function() {
       expect(routerStub.delete
         .withArgs('/:id', 'favoriteCtrl.destroy')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 });

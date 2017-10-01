@@ -1,7 +1,7 @@
 'use strict';
 
 import multer from 'multer';
-let upload = multer({dest : 'uploads/'});
+let upload = multer({dest: 'uploads/'});
 import {Router} from 'express';
 import * as controller from './user.controller';
 import * as auth from '../../auth/auth.service';
@@ -9,8 +9,14 @@ import * as auth from '../../auth/auth.service';
 let router = new Router();
 
 let fields = [
-  { name : 'photos[0]', maxCount : 1 },
-  { name : 'photos[1]', maxCount : 1 }
+  {
+    name: 'photos[0]',
+    maxCount: 1
+  },
+  {
+    name: 'photos[1]',
+    maxCount: 1
+  }
 ];
 
 router.get('/', auth.hasRole('admin'), controller.index);

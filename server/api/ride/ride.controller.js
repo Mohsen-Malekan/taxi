@@ -61,6 +61,7 @@ function handleEntityNotFound(res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.error('error> ', err);
     res.status(statusCode).send(err);
   };
 }
@@ -104,7 +105,7 @@ export function index(req, res) {
       .then(data => {
         let result = {
           data,
-          numberOfPages : Math.ceil(count / qs.pagination.number)
+          numberOfPages: Math.ceil(count / qs.pagination.number)
         };
         res.status(200).json(result);
       })
@@ -126,7 +127,7 @@ export function show(req, res) {
 
 // Gets a list of user Rides from the DB
 export function userRides(req, res) {
-  return Ride.find({userId : req.params.id}).exec()
+  return Ride.find({userId: req.params.id}).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -158,6 +159,27 @@ export function cost(req, res) {
     .catch(handleError(res));
 }
 
+// settlement
+export function settlement(req, res) {
+  console.log('settlement', req.params.date);
+  return Ride.aggregate([
+    {
+      $match: {date: {$gte: new Date(req.params.date)}}
+    },
+    {
+      $group: {
+        _id: '$driver',
+        total: {$sum: '$cost'},
+        count: {$sum: 1}
+      }
+    }
+  ])
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 // Creates a new Ride in the DB
 export function create(req, res) {
   // todo: send notification to drivers
@@ -166,7 +188,10 @@ export function create(req, res) {
   let driver = {};
   let ride = new Ride();
   return ride.save()
-    .then(entity => res.status(201).json({entity, driver}))
+    .then(entity => res.status(201).json({
+      entity,
+      driver
+    }))
     .catch(handleError(res));
 }
 
@@ -175,7 +200,12 @@ export function upsert(req, res) {
   if(req.body._id) {
     Reflect.deleteProperty(req.body, '_id');
   }
-  return Ride.findOneAndUpdate({_id : req.params.id}, req.body, {new : true, upsert : true, setDefaultsOnInsert : true, runValidators : true}).exec()
+  return Ride.findOneAndUpdate({_id: req.params.id}, req.body, {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true
+  }).exec()
 
     .then(respondWithResult(res))
     .catch(handleError(res));

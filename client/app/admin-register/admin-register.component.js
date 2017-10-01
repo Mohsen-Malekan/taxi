@@ -5,14 +5,13 @@ import ngFileUpload from 'ng-file-upload';
 
 class AdminRegisterController {
   user = {
-    name     : '',
-    mobile   : '',
-    password : ''
+    name: '',
+    mobile: '',
+    password: ''
   };
   errors = {};
   submitted = false;
   test = '';
-
 
   /*@ngInject*/
   constructor($http, $state) {
@@ -29,9 +28,9 @@ class AdminRegisterController {
           this.submitted = false;
           form.$setPristine();
           this.user = {
-            name     : '',
-            mobile   : '',
-            password : ''
+            name: '',
+            mobile: '',
+            password: ''
           };
         })
         .catch(err => {
@@ -50,8 +49,8 @@ class AdminRegisterController {
 export default angular.module('taxiApp.admin.register', [uiRouter])
   .config(routing)
   .component('adminRegister', {
-    template     : require('./admin-register.html'),
-    controller   : AdminRegisterController,
-    controllerAs : 'vm'
+    template: require('./admin-register.html'),
+    controller: AdminRegisterController,
+    controllerAs: 'vm'
   })
   .name;

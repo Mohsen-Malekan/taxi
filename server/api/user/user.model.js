@@ -4,6 +4,7 @@ import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 import {registerEvents} from './user.events';
+import shared from '../../config/environment/shared';
 
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
@@ -23,29 +24,51 @@ let UserSchema = new Schema({
     type: String,
     required: false
   },
+  accountNumber: String,
   role: {
     type: String,
-    default: 'user'
+    default: 'user',
+    enum: shared.userRoles
   },
   password: {
     type: String,
-    required() {
-      return authTypes.indexOf(this.provider) === -1;
-    }
+    required: true
   },
-  date: {type: Date, default: Date.now()},
-  active: {type: Boolean, default: false},
+  date: {
+    type: Date,
+    default: Date.now()
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
   activationCode: String,
-  lastState: {type: String, default: '0', maxLength: 1},
-  lastLat: {type: Number, default: 0},
-  lastLng: {type: Number, default: 0},
-  asset: {type: Number, default: 0},
+  lastState: {
+    type: String,
+    default: '0',
+    maxLength: 1
+  },
+  lastLat: {
+    type: Number,
+    default: 0
+  },
+  lastLng: {
+    type: Number,
+    default: 0
+  },
+  asset: {
+    type: Number,
+    default: 0
+  },
+  rate: {
+    type: Number,
+    min: 0,
+    max: 10
+  },
   sharingCode: String,
   challengerCode: String,
   provider: String,
-  salt: String,
-  google: {},
-  github: {}
+  salt: String
 });
 
 /**
@@ -127,7 +150,7 @@ UserSchema
       return true;
     }
 
-    return this.constructor.findOne({ email: value }).exec()
+    return this.constructor.findOne({email: value}).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -143,7 +166,7 @@ UserSchema
 UserSchema
   .path('mobile')
   .validate(function(value) {
-    return this.constructor.findOne({ mobile: value }).exec()
+    return this.constructor.findOne({mobile: value}).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -162,7 +185,7 @@ UserSchema
     if(!this.nationalCode) {
       return true;
     }
-    return this.constructor.findOne({ nationalCode: value }).exec()
+    return this.constructor.findOne({nationalCode: value}).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -178,7 +201,7 @@ UserSchema
 UserSchema
   .path('sharingCode')
   .validate(function(value) {
-    return this.constructor.findOne({ sharingCode: value }).exec()
+    return this.constructor.findOne({sharingCode: value}).exec()
       .then(user => {
         if(user) {
           return this.id === user.id;
@@ -197,7 +220,7 @@ UserSchema
     return mobile.match(/^(09)[0-9]{9}$/);
   }, 'شماره موبایل نامعتبر است');
 
-var validatePresenceOf = function(value) {
+let validatePresenceOf = function(value) {
   return value && value.length;
 };
 
@@ -317,14 +340,14 @@ UserSchema.methods = {
       }
     }
 
-    var defaultIterations = 10000;
-    var defaultKeyLength = 64;
-    var salt = new Buffer(this.salt, 'base64');
+    let defaultIterations = 10000;
+    let defaultKeyLength = 64;
+    let salt = new Buffer(this.salt, 'base64');
 
     if(!callback) {
       // eslint-disable-next-line no-sync
       return crypto.pbkdf2Sync(password, salt, defaultIterations,
-          defaultKeyLength, 'sha1')
+        defaultKeyLength, 'sha1')
         .toString('base64');
     }
 
@@ -339,10 +362,10 @@ UserSchema.methods = {
   }
 };
 
-UserSchema.statics.findByIdAndToggle = function(id) {
+UserSchema.statics.findByIdAndToggle = function(id, prop = 'active') {
   return this.findById(id).exec()
     .then(user => {
-      user.active = !user.active;
+      user[prop] = !user[prop];
       return user.save();
     });
 };

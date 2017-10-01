@@ -35,8 +35,8 @@ angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootst
   .config(routeConfig)
   .directive('mongooseError', function() {
     return {
-      restrict : 'A',
-      require  : 'ngModel',
+      restrict: 'A',
+      require: 'ngModel',
       link(scope, element, attrs, ngModel) {
         element.on('keydown', () => ngModel.$setValidity('mongoose', true));
       }
@@ -58,6 +58,6 @@ angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootst
 angular.element(document)
   .ready(() => {
     angular.bootstrap(document, ['taxiApp'], {
-      strictDi : true
+      strictDi: true
     });
   });

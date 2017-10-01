@@ -5,11 +5,11 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('track', {
-      url      : '/track/:id',
-      template : '<track ride="$resolve.ride.data"/>',
-      resolve  : {
+      url: '/track/:id',
+      template: '<track ride="$resolve.ride.data"/>',
+      resolve: {
         /*@ngInject*/
-        ride : ($http, $stateParams) => {
+        ride: ($http, $stateParams) => {
           return $http.get(`api/rides/${$stateParams.id}`)
             .catch(() => undefined);
         }

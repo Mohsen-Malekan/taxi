@@ -24,17 +24,17 @@ class UsersController {
 
   toggleActivation(user) {
     return this.$http.get(`api/users/toggleActivation/${user._id}`);
-      // .then(() => user.active = !user.active);
+    // .then(() => user.active = !user.active);
   }
 
   delete(user) {
     return this.$http.delete(`api/users/${user._id}`)
-    .then(() => this.users.splice(this.users.indexOf(user)));
+      .then(() => this.users.splice(this.users.indexOf(user)));
   }
 
   callServer(tableState) {
     this.$parent.vm.isLoading = true;
-    tableState.search = _.merge(tableState.search, { predicateObject : { role : this.$parent.vm.$stateParams.role } });
+    tableState.search = _.merge(tableState.search, {predicateObject: {role: this.$parent.vm.$stateParams.role}});
 
     this.$parent.vm.$http.get(`api/users?${this.$parent.vm.$hps(tableState)}`).then(result => {
       this.$parent.vm.users = result.data.data;
@@ -47,8 +47,8 @@ class UsersController {
 export default angular.module('taxiApp.admin.users', [uiRouter])
   .config(routing)
   .component('users', {
-    template     : require('./users.html'),
-    controller   : UsersController,
-    controllerAs : 'vm'
+    template: require('./users.html'),
+    controller: UsersController,
+    controllerAs: 'vm'
   })
   .name;

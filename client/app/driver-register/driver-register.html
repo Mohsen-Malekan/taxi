@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <form class="form" name="form" ng-submit="vm.register(form)" novalidate>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
                                             'has-error': form.name.$invalid && vm.submitted }">
                     <label>نام</label>
@@ -13,7 +13,7 @@
                     </p>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group" ng-class="{ 'has-success': form.mobile.$valid && vm.submitted,
                                             'has-error': form.mobile.$invalid && vm.submitted }">
                     <label>شماره موبایل</label>
@@ -33,7 +33,7 @@
                     </p>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group"
                      ng-class="{ 'has-success': form.nationalCode.$valid && vm.submitted, 'has-error': form.nationalCode.$invalid && vm.submitted }">
                     <label>کد ملی</label>
@@ -50,6 +50,23 @@
                     </p>
                     <p class="help-block" ng-show="form.nationalCode.$error.mongoose">
                         {{ vm.errors.nationalCode }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group" ng-class="{ 'has-success': form.accountNumber.$valid && vm.submitted,
+                                            'has-error': form.accountNumber.$invalid && vm.submitted }">
+                    <label>شماره حساب</label>
+
+                    <input type="text" name="accountNumber" class="form-control" ng-model="vm.user.accountNumber"
+                           style="direction: ltr"
+                           required
+                           mongoose-error/>
+                    <p class="help-block" ng-show="form.accountNumber.$error.required && vm.submitted">
+                        شماره حساب را وارد کنید
+                    </p>
+                    <p class="help-block" ng-show="form.accountNumber.$error.mongoose">
+                        {{ vm.errors.accountNumber }}
                     </p>
                 </div>
             </div>
@@ -76,13 +93,19 @@
             <div class="col-sm-2">
                 <div class="thumbnail">
                     <img ng-show="vm.user.photos[0]" ngf-thumbnail="vm.user.photos[0]" alt="driver-profile-picture">
-                    <img ng-hide="vm.user.photos[0]" ng-src="/assets/images/default_user.jpg" alt="drefault-profile-picture">
+                    <img ng-hide="vm.user.photos[0]" ng-src="/assets/images/default_user.jpg"
+                         alt="drefault-profile-picture">
                     <div class="caption">
-                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد کنید</p>
+                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد
+                            کنید</p>
                         <div>
-                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[0]" name="photos" ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب</div>
-                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[0] = null">حذف</button>
+                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[0]" name="photos"
+                                 ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[0] = null">
+                                حذف
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -90,13 +113,19 @@
             <div class="col-sm-2">
                 <div class="thumbnail">
                     <img ng-show="vm.user.photos[1]" ngf-thumbnail="vm.user.photos[1]" alt="driver-profile-picture">
-                    <img ng-hide="vm.user.photos[1]" ng-src="/assets/images/default_user.jpg" alt="drefault-profile-picture">
+                    <img ng-hide="vm.user.photos[1]" ng-src="/assets/images/default_user.jpg"
+                         alt="drefault-profile-picture">
                     <div class="caption">
-                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد کنید</p>
+                        <p class="small text-info">اسکن تصویر <span style="direction: ltr">3*4</span> متقاضی را وارد
+                            کنید</p>
                         <div>
-                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[1]" name="photos" ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب</div>
-                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[1] = null">حذف</button>
+                            <div class="btn btn-primary btn-sm" ngf-select ng-model="vm.user.photos[1]" name="photos"
+                                 ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                                 ngf-max-size="2MB" ngf-min-height="100" ngf-resize="{width: 200, height: 300}">انتخاب
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.user.photos[1] = null">
+                                حذف
+                            </button>
                         </div>
                     </div>
                 </div>

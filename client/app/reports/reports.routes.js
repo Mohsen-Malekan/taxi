@@ -3,8 +3,9 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('admin.reports', {
-      url          : '/reports/:type',
-      template     : '<reports></reports>',
-      authenticate : 'admin'
+      url: '/reports',
+      // abstract: true,
+      template: '<reports></reports>',
+      authenticate: 'admin'
     });
 }

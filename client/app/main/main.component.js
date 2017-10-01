@@ -23,7 +23,7 @@ export class MainController {
   }
 
   submit() {
-    this.$http.post('/api/users/confirm', {activationCode : this.code})
+    this.$http.post('/api/users/confirm', {activationCode: this.code})
       .then(response => {
         console.log('res>', response.data);
       });
@@ -46,8 +46,8 @@ export class MainController {
 export default angular.module('taxiApp.main', [uiRouter])
   .config(routing)
   .component('main', {
-    template     : require('./main.html'),
-    controller   : MainController,
-    controllerAs : 'vm'
+    template: require('./main.html'),
+    controller: MainController,
+    controllerAs: 'vm'
   })
   .name;

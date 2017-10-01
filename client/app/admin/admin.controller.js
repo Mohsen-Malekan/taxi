@@ -60,6 +60,12 @@ export default class AdminController {
         state: 'admin.notifications',
         icon: 'fa fa-bell',
         url: '/admin/notifications'
+      },
+      {
+        title: 'گزارشات',
+        state: 'admin.reports',
+        icon: 'fa fa-database',
+        url: '/admin/reports/'
       }
     ];
   }
@@ -67,7 +73,7 @@ export default class AdminController {
   $onInit() {
     let url = this.$state.href(this.$state.current.name, this.$state.params);
     let index = _.findIndex(this.tabs, {url});
-    this.active = index === -1 ? this.tabs.length : index;
+    this.active = index === -1 ? this.tabs.length - 1 : index;
   }
 
   changeState(state) {
@@ -76,9 +82,5 @@ export default class AdminController {
     } else if(angular.isObject(state)) {
       this.$state.go(state.name, state.param);
     }
-  }
-
-  changeState2(state, type) {
-    this.$state.go(state, {type});
   }
 }

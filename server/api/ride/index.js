@@ -7,11 +7,12 @@ import * as auth from '../../auth/auth.service';
 let router = new Router();
 
 router.get('/', auth.hasRole('admin'), controller.index);
-router.get('/:id', auth.hasRole('admin'), controller.show);
-router.get('/user/:id', auth.hasRole('admin'), controller.userRides);
 router.get('/user', auth.isAuthenticated(), controller.user);
+router.get('/user/:id', auth.hasRole('admin'), controller.userRides);
 router.get('/available', auth.isAuthenticated(), controller.available);
 router.get('/cost/:id', auth.isAuthenticated(), controller.cost);
+router.get('/settlement/:date', auth.hasRole('admin'), controller.settlement);
+router.get('/:id', auth.hasRole('admin'), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.upsert);
 router.patch('/:id', auth.isAuthenticated(), controller.patch);

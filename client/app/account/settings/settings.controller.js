@@ -2,16 +2,15 @@
 
 export default class SettingsController {
   user = {
-    oldPassword     : '',
-    newPassword     : '',
-    confirmPassword : ''
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
   };
   errors = {
-    other : undefined
+    other: undefined
   };
   message = '';
   submitted = false;
-
 
   /*@ngInject*/
   constructor(Auth) {

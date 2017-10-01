@@ -5,13 +5,13 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('admin.driver', {
-      url      : '/driver',
-      template : '<ui-view></ui-view>',
-      abstract : true
+      url: '/driver',
+      template: '<ui-view></ui-view>',
+      abstract: true
     })
     .state('admin.driver.register', {
-      url          : '/register',
-      template     : '<driver-register></driver-register>',
-      authenticate : 'admin'
+      url: '/register',
+      template: '<driver-register></driver-register>',
+      authenticate: 'admin'
     });
 }

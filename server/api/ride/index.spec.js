@@ -5,30 +5,30 @@
 var proxyquire = require('proxyquire').noPreserveCache();
 
 var rideCtrlStub = {
-  index   : 'rideCtrl.index',
-  show    : 'rideCtrl.show',
-  create  : 'rideCtrl.create',
-  upsert  : 'rideCtrl.upsert',
-  patch   : 'rideCtrl.patch',
-  destroy : 'rideCtrl.destroy'
+  index: 'rideCtrl.index',
+  show: 'rideCtrl.show',
+  create: 'rideCtrl.create',
+  upsert: 'rideCtrl.upsert',
+  patch: 'rideCtrl.patch',
+  destroy: 'rideCtrl.destroy'
 };
 
 var routerStub = {
-  get    : sinon.spy(),
-  put    : sinon.spy(),
-  patch  : sinon.spy(),
-  post   : sinon.spy(),
-  delete : sinon.spy()
+  get: sinon.spy(),
+  put: sinon.spy(),
+  patch: sinon.spy(),
+  post: sinon.spy(),
+  delete: sinon.spy()
 };
 
 // require the index with our stubbed out modules
 var rideIndex = proxyquire('./index.js', {
-  express : {
+  express: {
     Router() {
       return routerStub;
     }
   },
-  './ride.controller' : rideCtrlStub
+  './ride.controller': rideCtrlStub
 });
 
 describe('Ride API Router:', function() {
@@ -40,7 +40,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.index', function() {
       expect(routerStub.get
         .withArgs('/', 'rideCtrl.index')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -48,7 +48,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.show', function() {
       expect(routerStub.get
         .withArgs('/:id', 'rideCtrl.show')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -56,7 +56,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.create', function() {
       expect(routerStub.post
         .withArgs('/', 'rideCtrl.create')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -64,7 +64,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.upsert', function() {
       expect(routerStub.put
         .withArgs('/:id', 'rideCtrl.upsert')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -72,7 +72,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.patch', function() {
       expect(routerStub.patch
         .withArgs('/:id', 'rideCtrl.patch')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 
@@ -80,7 +80,7 @@ describe('Ride API Router:', function() {
     it('should route to ride.controller.destroy', function() {
       expect(routerStub.delete
         .withArgs('/:id', 'rideCtrl.destroy')
-        ).to.have.been.calledOnce;
+      ).to.have.been.calledOnce;
     });
   });
 });

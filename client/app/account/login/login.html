@@ -1,52 +1,53 @@
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>ورود</h1>
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>ورود</h1>
+        </div>
+        <div class="col-sm-12">
+            <form class="form" name="form" ng-submit="vm.login(form)" novalidate>
+
+                <div class="form-group">
+                    <label>همراه</label>
+
+                    <input type="text" name="mobile" class="form-control" ng-model="vm.user.mobile"
+                           style="direction: ltr"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>گذرواژه</label>
+
+                    <input type="password" name="password" class="form-control" ng-model="vm.user.password"
+                           style="direction: ltr"
+                           required>
+                </div>
+
+                <div class="form-group has-error">
+                    <p class="help-block"
+                       ng-show="form.mobile.$error.required && form.password.$error.required && vm.submitted">
+                        شماره همراه و گذرواژه خود را وارد کنید.
+                    </p>
+
+                    <p class="help-block">{{ vm.errors.login }}</p>
+                </div>
+
+                <div>
+                    <button class="btn btn-inverse btn-lg btn-login" type="submit">
+                        ورود
+                    </button>
+                    <a class="btn btn-default btn-lg btn-register" ui-sref="signup">
+                        ثبت نام
+                    </a>
+                </div>
+
+                <!--<hr/>
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <oauth-buttons classes="btn-block"></oauth-buttons>
+                  </div>
+                </div>-->
+            </form>
+        </div>
     </div>
-    <div class="col-sm-12">
-      <form class="form" name="form" ng-submit="vm.login(form)" novalidate>
-
-        <div class="form-group">
-          <label>همراه</label>
-
-          <input type="text" name="mobile" class="form-control" ng-model="vm.user.mobile"
-                 style="direction: ltr"
-                 required>
-        </div>
-
-        <div class="form-group">
-          <label>گذرواژه</label>
-
-          <input type="password" name="password" class="form-control" ng-model="vm.user.password"
-                 style="direction: ltr"
-                 required>
-        </div>
-
-        <div class="form-group has-error">
-          <p class="help-block" ng-show="form.mobile.$error.required && form.password.$error.required && vm.submitted">
-             شماره همراه و گذرواژه خود را وارد کنید.
-          </p>
-
-          <p class="help-block">{{ vm.errors.login }}</p>
-        </div>
-
-        <div>
-          <button class="btn btn-inverse btn-lg btn-login" type="submit">
-            ورود
-          </button>
-          <a class="btn btn-default btn-lg btn-register" ui-sref="signup">
-            ثبت نام
-          </a>
-        </div>
-
-        <!--<hr/>
-        <div class="row">
-          <div class="col-sm-4 col-md-3">
-            <oauth-buttons classes="btn-block"></oauth-buttons>
-          </div>
-        </div>-->
-      </form>
-    </div>
-  </div>
-  <hr>
+    <hr>
 </div>

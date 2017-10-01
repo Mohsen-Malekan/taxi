@@ -35,8 +35,8 @@ describe('Favorite API:', function() {
       request(app)
         .post('/api/favorites')
         .send({
-          name : 'New Favorite',
-          info : 'This is the brand new favorite!!!'
+          name: 'New Favorite',
+          info: 'This is the brand new favorite!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -89,8 +89,8 @@ describe('Favorite API:', function() {
       request(app)
         .put(`/api/favorites/${newFavorite._id}`)
         .send({
-          name : 'Updated Favorite',
-          info : 'This is the updated favorite!!!'
+          name: 'Updated Favorite',
+          info: 'This is the updated favorite!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -138,8 +138,16 @@ describe('Favorite API:', function() {
       request(app)
         .patch(`/api/favorites/${newFavorite._id}`)
         .send([
-          { op : 'replace', path : '/name', value : 'Patched Favorite' },
-          { op : 'replace', path : '/info', value : 'This is the patched favorite!!!' }
+          {
+            op: 'replace',
+            path: '/name',
+            value: 'Patched Favorite'
+          },
+          {
+            op: 'replace',
+            path: '/info',
+            value: 'This is the patched favorite!!!'
+          }
         ])
         .expect(200)
         .expect('Content-Type', /json/)

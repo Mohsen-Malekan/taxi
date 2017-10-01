@@ -30,7 +30,8 @@
                 <td>{{row.email}}</td>
                 <td>{{row.asset}}</td>
                 <td>
-                    <switch id="enabled" name="enabled" ng-model="row.active" ng-change="vm.toggleActivation(row)"></switch>
+                    <switch id="enabled" name="enabled" ng-model="row.active"
+                            ng-change="vm.toggleActivation(row)"></switch>
                 </td>
                 <td>{{row.sharingCode}}</td>
                 <td>{{row.challengerCode}}</td>
@@ -70,7 +71,9 @@
                 </a>
             </li>
             <li>
-                <a> صفحه <page-select></page-select> از {{numPages}} </a>
+                <a> صفحه
+                    <page-select></page-select>
+                    از {{numPages}} </a>
             </li>
             <li>
                 <a ng-click="selectPage(currentPage + 1)">

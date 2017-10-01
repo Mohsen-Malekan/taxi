@@ -83,13 +83,16 @@ tfoot td {
     height: 20px;
     display: flex;
 }
+
 .switch small {
     width: 20px;
     height: 20px;
 }
+
 .switch.checked {
     /* frame when enabled */
 }
+
 .switch.checked small {
     left: 11px;
 }

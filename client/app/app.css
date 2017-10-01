@@ -8,49 +8,49 @@
  */
 
 @font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot');
-  src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-  url('/assets/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'),
-  url('/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'),
-  url('/assets/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    font-family: 'Glyphicons Halflings';
+    src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot');
+    src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+    url('/assets/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'),
+    url('/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'),
+    url('/assets/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
 @import '~font-awesome/css/font-awesome.css';
 
 @font-face {
-  font-family: 'FontAwesome';
-  src: url('/assets/fonts/font-awesome/fontawesome-webfont.eot?v=4.1.0');
-  src: url('/assets/fonts/font-awesome/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
-  url('/assets/fonts/font-awesome/fontawesome-webfont.woff?v=4.1.0') format('woff'),
-  url('/assets/fonts/font-awesome/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
-  url('/assets/fonts/font-awesome/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'FontAwesome';
+    src: url('/assets/fonts/font-awesome/fontawesome-webfont.eot?v=4.1.0');
+    src: url('/assets/fonts/font-awesome/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
+    url('/assets/fonts/font-awesome/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+    url('/assets/fonts/font-awesome/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+    url('/assets/fonts/font-awesome/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'iran';
-  src: url('/assets/fonts/iran-sans/IRANSans-web.eot');
-  src: url('/assets/fonts/iran-sans/IRANSans-web.eot?#iefix') format('eot'), url('/assets/fonts/iran-sans/IRANSans-web.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'iran';
+    src: url('/assets/fonts/iran-sans/IRANSans-web.eot');
+    src: url('/assets/fonts/iran-sans/IRANSans-web.eot?#iefix') format('eot'), url('/assets/fonts/iran-sans/IRANSans-web.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'roboto';
-  src: url('/assets/fonts/roboto/Roboto-Condensed-webfont.eot');
-  src: url('/assets/fonts/roboto/Roboto-Condensed-webfont.eot?#iefix') format('eot'), /* IE6–8 */ url('/assets/fonts/roboto/Roboto-Condensed-webfont.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/assets/fonts/roboto/Roboto-Condensed-webfont.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'roboto';
+    src: url('/assets/fonts/roboto/Roboto-Condensed-webfont.eot');
+    src: url('/assets/fonts/roboto/Roboto-Condensed-webfont.eot?#iefix') format('eot'), /* IE6–8 */ url('/assets/fonts/roboto/Roboto-Condensed-webfont.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/assets/fonts/roboto/Roboto-Condensed-webfont.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'wYekan';
-  src: url('/assets/fonts/yekan/wYekan.eot');
-  src: url('/assets/fonts/yekan/wYekan.eot?#iefix') format('eot'), /* IE6–8 */ url('/assets/fonts/yekan/wYekan.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/assets/fonts/yekan/wYekan.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'wYekan';
+    src: url('/assets/fonts/yekan/wYekan.eot');
+    src: url('/assets/fonts/yekan/wYekan.eot?#iefix') format('eot'), /* IE6–8 */ url('/assets/fonts/yekan/wYekan.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/assets/fonts/yekan/wYekan.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /**
@@ -58,16 +58,15 @@
  */
 
 .browserupgrade {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0;
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
 }
 
 * {
-  font-family: wYekan, roboto, iran, tahoma;
+    font-family: wYekan, roboto, iran, tahoma;
 }
-
 
 /* Component styles are injected through gulp */
 /* inject:css */

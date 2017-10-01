@@ -69,7 +69,7 @@ export function index(req, res) {
       .then(data => {
         let result = {
           data,
-          numberOfPages : Math.ceil(count / qs.pagination.number)
+          numberOfPages: Math.ceil(count / qs.pagination.number)
         };
         res.status(200).json(result);
       })
@@ -103,7 +103,10 @@ export function create(req, res) {
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
-  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.activationCode = randomstring.generate({
+    length: 5,
+    charset: 'numeric'
+  }).toString();
   newUser.save()
     .then(function(user) {
       // send activationCode to user
@@ -111,8 +114,8 @@ export function create(req, res) {
         console.log('sms error:      ', error || 'none'); // Print the error if one occurred
         console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
       });
-      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
-        expiresIn : 60 * 60 * 5
+      let token = jwt.sign({_id: user._id}, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
       });
       let userInfo = _.pick(user, [
         'name',
@@ -126,7 +129,10 @@ export function create(req, res) {
         'asset',
         'sharingCode']);
       userInfo.id = user._id;
-      res.json({ token, user : userInfo });
+      res.json({
+        token,
+        user: userInfo
+      });
     })
     .catch(validationError(res));
 }
@@ -159,8 +165,8 @@ export function createDriver(req, res) {
         });
       }))
     .then(user => {
-      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
-        expiresIn : 60 * 60 * 5
+      let token = jwt.sign({_id: user._id}, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
       });
       let userInfo = _.pick(user, [
         'name',
@@ -174,7 +180,10 @@ export function createDriver(req, res) {
         'asset',
         'sharingCode']);
       userInfo.id = user._id;
-      res.json({ token, user : userInfo });
+      res.json({
+        token,
+        user: userInfo
+      });
     })
     .catch(validationError(res));
 }
@@ -188,7 +197,10 @@ export function createAdmin(req, res) {
   newUser.role = 'admin';
   newUser.active = true;
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
-  newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.activationCode = randomstring.generate({
+    length: 5,
+    charset: 'numeric'
+  }).toString();
   newUser.save()
     .then(function(user) {
       // send activationCode to user
@@ -196,8 +208,8 @@ export function createAdmin(req, res) {
       //   console.log('sms error:      ', error || 'none'); // Print the error if one occurred
       //   console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
       // });
-      let token = jwt.sign({ _id : user._id }, config.secrets.session, {
-        expiresIn : 60 * 60 * 5
+      let token = jwt.sign({_id: user._id}, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
       });
       let userInfo = _.pick(user, [
         'name',
@@ -211,7 +223,10 @@ export function createAdmin(req, res) {
         'asset',
         'sharingCode']);
       userInfo.id = user._id;
-      res.json({ token, user : userInfo });
+      res.json({
+        token,
+        user: userInfo
+      });
     })
     .catch(validationError(res));
 }
@@ -278,18 +293,21 @@ export function getActivationCode(req, res) {
       if(!user) {
         return res.status(404).end();
       }
-      let activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+      let activationCode = randomstring.generate({
+        length: 5,
+        charset: 'numeric'
+      }).toString();
       user.activationCode = activationCode;
       return user.save()
-          .then(() => {
-            // end activation code to user
-            request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (error, response, body) => {
-              console.log('sms error:      ', error || 'none'); // Print the error if one occurred
-              console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
-            });
-            return res.json({activationCode});
-          })
-          .catch(handleError(res));
+        .then(() => {
+          // end activation code to user
+          request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (error, response, body) => {
+            console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+            console.log('sms statusCode: ', response && response.statusCode); // Print the response status code if a response was received
+          });
+          return res.json({activationCode});
+        })
+        .catch(handleError(res));
     })
     .catch(handleError(res));
 }
@@ -322,7 +340,7 @@ export function confirm(req, res) {
 export function me(req, res, next) {
   let userId = req.user._id;
 
-  return User.findOne({ _id : userId }, '-salt -password -activationCode').exec()
+  return User.findOne({_id: userId}, '-salt -password -activationCode').exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
         return res.status(401).end();

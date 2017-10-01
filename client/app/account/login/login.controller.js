@@ -2,12 +2,12 @@
 
 export default class LoginController {
   user = {
-    name     : '',
-    mobile   : '',
-    password : ''
+    name: '',
+    mobile: '',
+    password: ''
   };
   errors = {
-    login : undefined
+    login: undefined
   };
   submitted = false;
 
@@ -22,8 +22,8 @@ export default class LoginController {
 
     if(form.$valid) {
       this.$http.login({
-        mobile   : this.user.mobile,
-        password : this.user.password
+        mobile: this.user.mobile,
+        password: this.user.password
       })
         .then(() => {
           // Logged in, redirect to home

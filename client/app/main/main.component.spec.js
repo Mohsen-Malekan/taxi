@@ -24,7 +24,7 @@ describe('Component: MainComponent', function() {
     state = $state;
     mainComponent = $componentController('main', {
       $http,
-      $scope : scope
+      $scope: scope
     });
   }));
 

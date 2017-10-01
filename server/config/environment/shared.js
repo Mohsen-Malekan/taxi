@@ -1,7 +1,6 @@
 'use strict';
 
 exports = module.exports = {
-  // List of user roles
-  userRoles: ['guest', 'user', 'driver', 'admin', 'sysAdmin'],
+  userRoles: ['guest', 'user', 'customer', 'driver', 'admin', 'sysAdmin'],
   rideStatus: ['waiting', 'inProgress', 'finished', 'cancelledByUser', 'cancelledByDriver']
 };

@@ -5,8 +5,8 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('admin.register', {
-      url          : '/register',
-      template     : '<admin-register></admin-register>',
-      authenticate : 'sysAdmin'
+      url: '/register',
+      template: '<admin-register></admin-register>',
+      authenticate: 'sysAdmin'
     });
 }
