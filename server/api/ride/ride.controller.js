@@ -12,6 +12,8 @@
 
 import jsonpatch from 'fast-json-patch';
 import Ride from './ride.model';
+import mongoXlsx from 'mongo-xlsx';
+import {Settlement} from './ride.model'
 import _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
@@ -159,25 +161,75 @@ export function cost(req, res) {
     .catch(handleError(res));
 }
 
-// settlement
+// Settlement
 export function settlement(req, res) {
-  console.log('settlement', req.params.date);
-  return Ride.aggregate([
-    {
-      $match: {date: {$gte: new Date(req.params.date)}}
-    },
-    {
-      $group: {
-        _id: '$driver',
-        total: {$sum: '$cost'},
-        count: {$sum: 1}
+  Settlement.findOne({}, {}, { sort : { date : -1 } }, (err, date) => {
+    let lastDate = (date || {}).date || new Date(0);
+    let nextDate = new Date();
+    console.log('settlement> ', lastDate, nextDate);
+    return Ride.aggregate([
+      {
+        $match: {date: {$gt: lastDate}}
+      },
+      {
+        $group: {
+          _id: '$driver',
+          total: {$sum: '$cost'},
+          count: {$sum: 1}
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'driver'
+        }
+      },
+      {
+        $unwind: {
+          path : '$driver'
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          'نام': '$driver.name',
+          'کد ملی': '$driver.nationalCode',
+          'همراه': '$driver.mobile',
+          'شماره حساب': '$driver.accountNumber',
+          'تعداد سفر': '$count',
+          'مجموع': '$total'
+        }
+      },
+      {
+        $sort : {'نام' : 1}
       }
-    }
-  ])
-    .exec()
-    .then(handleEntityNotFound(res))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
+    ])
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(data => {
+        if (!data || !data.length) {
+          return [];
+        }
+        let model = mongoXlsx.buildDynamicModel(data);
+        let options = {
+          save: true,
+          fileName: `settlement-${nextDate.toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`,
+          defaultSheetName: 'worksheet',
+          path: './client/assets/reports'
+        };
+        mongoXlsx.mongoData2Xlsx(data, model, options, (err, result) => {
+          console.log('File saved at:', result.fullPath);
+          Settlement.create({
+            date : nextDate
+          });
+        });
+        return data;
+      })
+      .then(respondWithResult(res))
+      .catch(handleError(res));
+  });
 }
 
 // Creates a new Ride in the DB

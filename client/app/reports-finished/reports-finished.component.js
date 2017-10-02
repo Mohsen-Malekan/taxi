@@ -14,7 +14,7 @@ class ReportsController {
   }
 
   $onInit() {
-    this.$http.get(`api/rides/settlement/${new Date(2017, 9, 1)}`)
+    this.$http.get('api/rides/settlement')
       .then(res => console.log(res.data));
   }
 
