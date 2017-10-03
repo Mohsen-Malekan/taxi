@@ -9,10 +9,8 @@ export default function routes($stateProvider) {
       template: '<track ride="$resolve.ride.data"/>',
       resolve: {
         /*@ngInject*/
-        ride: ($http, $stateParams) => {
-          return $http.get(`api/rides/${$stateParams.id}`)
-            .catch(() => undefined);
-        }
+        ride: ($http, $stateParams) => $http.get(`api/rides/${$stateParams.id}`)
+          .catch(() => undefined)
       }
     });
 }

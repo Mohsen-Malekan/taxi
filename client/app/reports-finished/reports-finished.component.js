@@ -13,11 +13,6 @@ class ReportsController {
     this.$stateParams = $stateParams;
   }
 
-  $onInit() {
-    this.$http.get('api/rides/settlement')
-      .then(res => console.log(res.data));
-  }
-
   // callServer(tableState) {
   //   this.$parent.vm.isLoading = true;
   //   tableState.search = _.merge(tableState.search, {predicateObject: {isDone: true}});

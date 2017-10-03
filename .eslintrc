@@ -3,7 +3,9 @@
     "env": {
         "es6": true
     },
-    "globals": {},
+    "globals": {
+        "moment": false
+    },
     "plugins": [],
     "rules": {
         //Possible Errors

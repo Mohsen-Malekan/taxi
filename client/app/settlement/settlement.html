@@ -1,0 +1,74 @@
+<div class="row" style="margin-top: 5px">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-info" ng-click="vm.archive()">
+            <i class="fa fa-archive"></i>
+            آرشیو
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="vm.getUsers()">
+            <li class="fa fa-list"></li>
+            مشاده لیست صورتحساب
+        </button>
+        <button class="btn btn-success" ng-show="vm.users.length" print-btn>
+            <i class="fa fa-print"></i>
+            پرینت
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table" st-table="vm.users" print-section print-table="people">
+            <thead>
+            <tr>
+                <th st-sort="'نام'">نام</th>
+                <th st-sort="'کد ملی'">کد ملی</th>
+                <th st-sort="'همراه'">همراه</th>
+                <th st-sort="'شماره حساب'">شماره حساب</th>
+                <th st-sort="'تعداد سفر'">تعداد سفر</th>
+                <th st-sort="'مجموع'">مجموع</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in vm.users">
+                <td>{{row['نام']}}</td>
+                <td>{{row['کد ملی']}}</td>
+                <td>{{row['همراه']}}</td>
+                <td>{{row['شماره حساب']}}</td>
+                <td>{{row['تعداد سفر']}}</td>
+                <td>{{row['مجموع']}}</td>
+            </tr>
+            </tbody>
+            <!--<tfoot>
+            <tr>
+                <td colspan="8" class="text-center" st-pagination="" st-displayed-pages="" st-items-by-page="40"
+                    st-template="pagination.html"></td>
+            </tr>
+            </tfoot>-->
+        </table>
+    </div>
+</div>
+<!--
+<script type="text/ng-template" id="pagination.html">
+    <nav ng-if="pages.length >= 2">
+        <ul class="pagination">
+            <li>
+                <a ng-click="selectPage(1)">اول</a>
+            </li>
+            <li>
+                <a ng-click="selectPage(currentPage - 1)">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+            <li>
+                <a> صفحه
+                    <page-select></page-select>
+                    از {{numPages}} </a>
+            </li>
+            <li>
+                <a ng-click="selectPage(currentPage + 1)">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            </li>
+            <li><a ng-click="selectPage(numPages)">آخر</a></li>
+        </ul>
+    </nav>
+</script>-->

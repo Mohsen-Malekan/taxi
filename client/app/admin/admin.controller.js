@@ -66,6 +66,12 @@ export default class AdminController {
         state: 'admin.reports',
         icon: 'fa fa-database',
         url: '/admin/reports/'
+      },
+      {
+        title: 'تسویه حساب',
+        state: 'admin.settlement',
+        icon: 'fa fa-check-square-o',
+        url: '/admin/settlement'
       }
     ];
   }

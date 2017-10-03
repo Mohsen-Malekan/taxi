@@ -232,6 +232,13 @@ export function settlement(req, res) {
   });
 }
 
+// Settlement
+export function dates(req, res) {
+  return Settlement.find({}).exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 // Creates a new Ride in the DB
 export function create(req, res) {
   // todo: send notification to drivers

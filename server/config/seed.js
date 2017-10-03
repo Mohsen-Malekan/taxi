@@ -9,8 +9,8 @@ import User from '../api/user/user.model';
 import Ride from '../api/ride/ride.model';
 import config from './environment/';
 
-export default function seedDatabaseIfNeeded() {
-  if(config.seedDB) {
+export default function seedDatabaseIfNeeded () {
+  if (config.seedDB) {
     /*Thing.find({}).remove()
       .then(() => {
         let thing = Thing.create({
@@ -47,45 +47,44 @@ export default function seedDatabaseIfNeeded() {
       .catch(err => console.log('error populating things', err));*/
 
     Ride.find({}).remove()
-      .then(() => {
-        return Ride.create(
-          {
-            driver: '59cbb0897c4eb627cc132728',
-            user: '59d1ed144ac1812940842076',
-            date: Date.now(),
-            cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
-          },
-          {
-            driver: '59cbb0897c4eb627cc132728',
-            user: '59d1ed144ac1812940842076',
-            date: Date.now(),
-            cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
-          },
-          {
-            driver: '59cbb0897c4eb627cc132728',
-            user: '59d1ed144ac1812940842076',
-            date: Date.now(),
-            cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
-          },
-          {
-            driver: '59cbb0897c4eb627cc132728',
-            user: '59d1ed144ac1812940842076',
-            date: Date.now(),
-            cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
-          },
-          {
-            driver: '59cbb0897c4eb627cc132728',
-            user: '59d1ed144ac1812940842076',
-            date: Date.now(),
-            cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
-          });
-      })
+      .then(() => Ride.create(
+        {
+          driver: '59cbb0897c4eb627cc132728',
+          user: '59d1ed144ac1812940842076',
+          date: Date.now(),
+          cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+        },
+        {
+          driver: '59cbb0897c4eb627cc132728',
+          user: '59d1ed144ac1812940842076',
+          date: Date.now(),
+          cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+        },
+        {
+          driver: '59cbb0897c4eb627cc132728',
+          user: '59d1ed144ac1812940842076',
+          date: Date.now(),
+          cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+        },
+        {
+          driver: '59cbb0897c4eb627cc132728',
+          user: '59d1ed144ac1812940842076',
+          date: Date.now(),
+          cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+        },
+        {
+          driver: '59cbb0897c4eb627cc132728',
+          user: '59d1ed144ac1812940842076',
+          date: Date.now(),
+          cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+        })
+      )
       .then(() => console.log('finished populating rides'))
       .catch(err => console.log('error populating rides', err));
 
     User.find({role: config.userRoles[config.userRoles.length - 1]})
       .then(users => {
-        if(!users || !users.length) {
+        if (!users || !users.length) {
           User.create({
             provider: 'local',
             name: 'sysAdmin',

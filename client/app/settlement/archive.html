@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">آرشیو صورتحساب ها</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <h3 ng-show="modal.dates.length === 0" class="text-muted">
+        آرشیو خالی است
+    </h3>
+    <!--<a href="#" class="btn btn-primary" ng-repeat="date in modal.dates">
+        {{ date.date | jalaali }}
+    </a>-->
+    <a href="#" class="btn btn-primary">
+        {{ modal.date | jalaali:'jYYYY/jMM/jDD'}}
+    </a>
+</div>
