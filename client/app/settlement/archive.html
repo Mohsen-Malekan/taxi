@@ -5,10 +5,10 @@
     <h3 ng-show="modal.dates.length === 0" class="text-muted">
         آرشیو خالی است
     </h3>
-    <!--<a href="#" class="btn btn-primary" ng-repeat="date in modal.dates">
-        {{ date.date | jalaali }}
-    </a>-->
-    <a href="#" class="btn btn-primary">
-        {{ modal.date | jalaali:'jYYYY/jMM/jDD'}}
+    <a ng-repeat="date in modal.dates" target="_blank"
+       href="/assets/reports/settlement-{{date.date | fileName}}.xlsx"
+       class="btn btn-primary btn-sm" style="direction: ltr; margin-left: 2px">
+        {{ date.date | jalaali:'jYYYY/jMM/jDD HH:mm:ss' }}&nbsp;
+        <i class="fa fa-download"></i>
     </a>
 </div>

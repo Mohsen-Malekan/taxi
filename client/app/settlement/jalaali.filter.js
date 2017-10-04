@@ -1,6 +1,11 @@
+'ngInject';
+
+import moment from 'moment-jalaali';
+
+moment.loadPersian();
+
 export default function jalaali() {
   return function(date, format, isUTC) {
-    'ngInject';
     if(!date) {
       return '';
     }

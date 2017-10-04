@@ -52,30 +52,35 @@ export default function seedDatabaseIfNeeded () {
           driver: '59cbb0897c4eb627cc132728',
           user: '59d1ed144ac1812940842076',
           date: Date.now(),
+          status: 'finished',
           cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
         },
         {
           driver: '59cbb0897c4eb627cc132728',
           user: '59d1ed144ac1812940842076',
           date: Date.now(),
+          status: 'finished',
           cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
         },
         {
           driver: '59cbb0897c4eb627cc132728',
           user: '59d1ed144ac1812940842076',
           date: Date.now(),
+          status: 'finished',
           cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
         },
         {
           driver: '59cbb0897c4eb627cc132728',
           user: '59d1ed144ac1812940842076',
           date: Date.now(),
+          status: 'finished',
           cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
         },
         {
           driver: '59cbb0897c4eb627cc132728',
           user: '59d1ed144ac1812940842076',
           date: Date.now(),
+          status: 'finished',
           cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
         })
       )

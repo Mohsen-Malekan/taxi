@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 import {registerEvents} from './ride.events';
+import shared from '../../config/environment/shared';
 
 let SettlementSchema = new mongoose.Schema({
   date : Date
@@ -16,7 +17,7 @@ let RideSchema = new mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     ref  : 'User'
   },
-  srcLoc        : {},
+  src           : {},
   destinations  : [{}],
   distance      : {},
   date          : Date,
@@ -28,12 +29,15 @@ let RideSchema = new mongoose.Schema({
   paymentMethod : String,
   rate          : Number,
   description   : String,
-  status        : String,
-  isOpen        : {
+  status        : {
+    type    : String,
+    default : shared.rideStatus[0],
+    enum    : shared.rideStatus
+  },
+  isSettled : {
     type    : Boolean,
     default : false
-  },
-  isSettled : Boolean
+  }
 });
 
 registerEvents(RideSchema);

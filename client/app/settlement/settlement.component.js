@@ -3,13 +3,10 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './settlement.routes';
-import jalaali from './jalaali.filter';
 import 'angular-print/angularPrint.css';
 import 'angular-print/angularPrint.js';
-import * as moment from 'moment';
-// import * from 'moment-jalaali';
-// import 'moment';
-import 'moment-jalaali';
+import jalaali from './jalaali.filter';
+import fileName from './file-name.filter';
 
 class SettlementController {
   users = [];
@@ -32,7 +29,6 @@ class SettlementController {
       animation    : true,
       template     : require('./archive.html'),
       /*@ngInject*/
-      /*@ngInject*/
       controller   : 'ArchiveModalController',
       controllerAs : 'modal',
       size         : 'lg',
@@ -49,14 +45,13 @@ class ArchiveModalController {
   /*@ngInject*/
   constructor(dates) {
     this.dates = dates;
-    this.date = moment(this.dates[0].date).format('jYYYY/jMM/jDD');
-    console.log('dates> ', this.date);
   }
 }
 
 export default angular.module('taxiApp.admin.settlement', [uiRouter, 'AngularPrint'])
   .config(routing)
   .filter('jalaali', jalaali)
+  .filter('fileName', fileName)
   .component('settlement', {
     template     : require('./settlement.html'),
     controller   : SettlementController,
