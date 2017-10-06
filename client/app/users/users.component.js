@@ -11,6 +11,7 @@ class UsersController {
     this.$stateParams = $stateParams;
     this.Auth = Auth;
     this.$state = $state;
+    this.role = this.$stateParams.role;
   }
 
   $onInit() {
@@ -27,7 +28,7 @@ class UsersController {
     // .then(() => user.active = !user.active);
   }
 
-  delete(user) {
+  remove(user) {
     return this.$http.delete(`api/users/${user._id}`)
       .then(() => this.users.splice(this.users.indexOf(user)));
   }
@@ -35,6 +36,10 @@ class UsersController {
   callServer(tableState) {
     this.$parent.vm.isLoading = true;
     tableState.search = _.merge(tableState.search, {predicateObject: {role: this.$parent.vm.$stateParams.role}});
+
+    if(_.has(tableState, 'search.predicateObject.date')) {
+      _.set(tableState, 'search.predicateObject.date', '2017-09-30T22:22:48.627Z');
+    }
 
     this.$parent.vm.$http.get(`api/users?${this.$parent.vm.$hps(tableState)}`).then(result => {
       this.$parent.vm.users = result.data.data;

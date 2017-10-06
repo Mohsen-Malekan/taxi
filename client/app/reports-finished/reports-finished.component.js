@@ -17,7 +17,9 @@ class ReportsController {
 
   callServer(tableState) {
     this.$parent.vm.isLoading = true;
-    tableState.search = _.merge(tableState.search, {predicateObject : {status : 'finished'}});
+    tableState.search = _.merge(tableState.search, {predicateObject: {status: 'finished'}});
+
+    console.log(tableState);
 
     this.$parent.vm.$http.get(`api/rides?${this.$parent.vm.$hps(tableState)}`)
       .then(result => {
@@ -31,8 +33,8 @@ class ReportsController {
 export default angular.module('taxiApp.admin.reports.finished', [uiRouter])
   .config(routing)
   .component('reportsFinished', {
-    template     : require('./reports-finished.html'),
-    controller   : ReportsController,
-    controllerAs : 'vm'
+    template: require('./reports-finished.html'),
+    controller: ReportsController,
+    controllerAs: 'vm'
   })
   .name;

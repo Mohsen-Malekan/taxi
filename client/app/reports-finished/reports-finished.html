@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <table class="table" st-pipe="vm.callServer" st-table="vm.rides">
+        <table class="table table-striped" st-pipe="vm.callServer" st-table="vm.rides">
             <thead>
             <tr>
                 <th st-sort="user">مشتری</th>
@@ -19,33 +19,33 @@
                 <th st-sort="description">توضیحات</th>
             </tr>
             <tr>
-                <th><input st-search="user" /></th>
-                <th><input st-search="driver" /></th>
-                <th><input st-search="src" /></th>
-                <th><input st-search="destinations" /></th>
-                <th><input st-search="distance" /></th>
-                <th><input st-search="date" /></th>
-                <th><input st-search="arrivedAt" /></th>
-                <th><input st-search="startAt" /></th>
-                <th><input st-search="finishedAt" /></th>
-                <th><input st-search="duration" /></th>
-                <th><input st-search="cost" /></th>
-                <th><input st-search="paymentMethod" /></th>
-                <th><input st-search="rate" /></th>
-                <th><input st-search="description" /></th>
+                <th><input st-search="user" type="search" /></th>
+                <th><input st-search="driver" type="search" /></th>
+                <th><input st-search="src" type="search" /></th>
+                <th><input st-search="destinations" type="search" /></th>
+                <th><input st-search="distance" type="search" /></th>
+                <th><input st-search="date" type="search" /></th>
+                <th><input st-search="arrivedAt" type="search" /></th>
+                <th><input st-search="startAt" type="search" /></th>
+                <th><input st-search="finishedAt" type="search" /></th>
+                <th><input st-search="duration" type="search" /></th>
+                <th><input st-search="cost" type="search" /></th>
+                <th><input st-search="paymentMethod" type="search" /></th>
+                <th><input st-search="rate" type="search" /></th>
+                <th><input st-search="description" type="search" /></th>
             </tr>
             </thead>
             <tbody ng-show="!vm.isLoading">
             <tr ng-repeat="row in vm.rides">
-                <td>{{row.user}}</td>
-                <td>{{row.driver}}</td>
-                <td>{{row.src}}</td>
+                <td>{{row.user.name}}</td>
+                <td>{{row.driver.name}}</td>
+                <td>{{row.srcLat}} - {{row.srcLng}}</td>
                 <td>{{row.destinations}}</td>
                 <td>{{row.distance}}</td>
-                <td>{{row.date}}</td>
-                <td>{{row.arrivedAt}}</td>
-                <td>{{row.startAt}}</td>
-                <td>{{row.finishedAt}}</td>
+                <td>{{row.date | jalaali:'jYYYY/jMM/jDD HH:mm:ss'}}</td>
+                <td>{{row.arrivedAt | jalaali:'jYYYY/jMM/jDD HH:mm:ss'}}</td>
+                <td>{{row.startAt | jalaali:'jYYYY/jMM/jDD HH:mm:ss'}}</td>
+                <td>{{row.finishedAt | jalaali:'jYYYY/jMM/jDD HH:mm:ss'}}</td>
                 <td>{{row.duration}}</td>
                 <td>{{row.cost}}</td>
                 <td>{{row.paymentMethod}}</td>

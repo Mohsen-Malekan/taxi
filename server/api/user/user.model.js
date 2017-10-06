@@ -38,11 +38,23 @@ let UserSchema = new Schema({
     type: Date,
     default: Date.now()
   },
+  asset: {
+    type: Number,
+    default: 0
+  },
+  rate: {
+    type: Number,
+    min: 0,
+    max: 10,
+    default: 10
+  },
   active: {
     type: Boolean,
     default: false
   },
   activationCode: String,
+  sharingCode: String,
+  challengerCode: String,
   lastState: {
     type: String,
     default: '0',
@@ -56,17 +68,6 @@ let UserSchema = new Schema({
     type: Number,
     default: 0
   },
-  asset: {
-    type: Number,
-    default: 0
-  },
-  rate: {
-    type: Number,
-    min: 0,
-    max: 10
-  },
-  sharingCode: String,
-  challengerCode: String,
   provider: String,
   salt: String
 });

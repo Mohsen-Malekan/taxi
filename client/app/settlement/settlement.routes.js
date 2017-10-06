@@ -3,8 +3,8 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('admin.settlement', {
-      url          : '/settlement',
-      template     : '<settlement></settlement>',
-      authenticate : 'admin'
+      url: '/settlement',
+      template: '<settlement></settlement>',
+      authenticate: 'admin'
     });
 }

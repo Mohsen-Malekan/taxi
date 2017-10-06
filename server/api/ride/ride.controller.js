@@ -102,13 +102,15 @@ export function index(req, res) {
       handleError(res)(err);
     }
     return query
+      .populate('user', 'name')
+      .populate('driver', 'name')
       .skip(qs.pagination.start / qs.pagination.number * qs.pagination.number)
       .limit(Number(qs.pagination.number))
       .exec()
       .then(data => {
         let result = {
           data,
-          numberOfPages : Math.ceil(count / qs.pagination.number)
+          numberOfPages: Math.ceil(count / qs.pagination.number)
         };
         res.status(200).json(result);
       })
@@ -130,7 +132,7 @@ export function show(req, res) {
 
 // Gets a list of user Rides from the DB
 export function userRides(req, res) {
-  return Ride.find({userId : req.params.id}).exec()
+  return Ride.find({userId: req.params.id}).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -164,7 +166,7 @@ export function cost(req, res) {
 
 // Settlement
 export function settlement(req, res) {
-  Settlement.findOne({}, {}, { sort : { date : -1 } }, (err, date) => {
+  Settlement.findOne({}, {}, { sort: { date: -1 } }, (err, date) => {
     if(err) {
       return handleError(res)(err);
     }
@@ -173,41 +175,41 @@ export function settlement(req, res) {
     let nextDate = new Date();
     return Ride.aggregate([
       {
-        $match : {date : {$gt : lastDate}}
+        $match: {date: {$gt: lastDate}}
       },
       {
-        $group : {
-          _id   : '$driver',
-          total : {$sum : '$cost'},
-          count : {$sum : 1}
+        $group: {
+          _id: '$driver',
+          total: {$sum: '$cost'},
+          count: {$sum: 1}
         }
       },
       {
-        $lookup : {
-          from         : 'users',
-          localField   : '_id',
-          foreignField : '_id',
-          as           : 'driver'
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'driver'
         }
       },
       {
-        $unwind : {
-          path : '$driver'
+        $unwind: {
+          path: '$driver'
         }
       },
       {
-        $project : {
-          _id          : 0,
-          'نام'        : '$driver.name',
-          'کد ملی'     : '$driver.nationalCode',
-          'همراه'      : '$driver.mobile',
-          'شماره حساب' : '$driver.accountNumber',
-          'تعداد سفر'  : '$count',
-          'مجموع'      : '$total'
+        $project: {
+          _id: 0,
+          'نام': '$driver.name',
+          'کد ملی': '$driver.nationalCode',
+          'همراه': '$driver.mobile',
+          'شماره حساب': '$driver.accountNumber',
+          'تعداد سفر': '$count',
+          'مجموع': '$total'
         }
       },
       {
-        $sort : {'نام' : 1}
+        $sort: {'نام': 1}
       }
     ])
       .exec()
@@ -218,17 +220,17 @@ export function settlement(req, res) {
         }
         let model = mongoXlsx.buildDynamicModel(data);
         let options = {
-          save             : true,
+          save: true,
           // fileName         : `settlement-${nextDate.toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`,
-          fileName         : `settlement-${moment(nextDate).format('jYYYY-jMM-jDD_HH-mm-ss')}.xlsx`,
-          defaultSheetName : 'worksheet',
-          path             : './client/assets/reports'
+          fileName: `settlement-${moment(nextDate).format('jYYYY-jMM-jDD_HH-mm-ss')}.xlsx`,
+          defaultSheetName: 'worksheet',
+          path: './client/assets/reports'
         };
         console.log('moment ', moment(nextDate).format('jYYYY-jMM-jDD_HH-mm-ss'));
         mongoXlsx.mongoData2Xlsx(data, model, options, (err, result) => {
           console.log('File saved at:', result.fullPath);
           Settlement.create({
-            date : nextDate
+            date: nextDate
           });
         });
         return data;
@@ -265,11 +267,11 @@ export function upsert(req, res) {
   if(req.body._id) {
     Reflect.deleteProperty(req.body, '_id');
   }
-  return Ride.findOneAndUpdate({_id : req.params.id}, req.body, {
-    new                 : true,
-    upsert              : true,
-    setDefaultsOnInsert : true,
-    runValidators       : true
+  return Ride.findOneAndUpdate({_id: req.params.id}, req.body, {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true
   }).exec()
 
     .then(respondWithResult(res))

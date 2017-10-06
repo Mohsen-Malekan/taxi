@@ -1,11 +1,15 @@
 <div class="row">
     <div class="col-sm-12">
-        <table class="table" st-pipe="vm.callServer" st-table="vm.users">
+        <table class="table table-striped" st-pipe="vm.callServer" st-table="vm.users">
             <thead>
             <tr>
                 <th st-sort="name">نام</th>
                 <th st-sort="mobile">شماره</th>
+                <th st-sort="nationalCode">کد ملی</th>
+                <th st-sort="date">عضویت</th>
+                <th st-sort="accountNumber" ng-hide="vm.role === 'user'">شماره حساب</th>
                 <th st-sort="email">ایمیل</th>
+                <th st-sort="rate">امتیاز</th>
                 <th st-sort="asset">موجودی</th>
                 <th st-sort="active">وضعیت</th>
                 <th st-sort="sharingCode">کد معرفی</th>
@@ -15,9 +19,19 @@
             <tr>
                 <th><input st-search="name"/></th>
                 <th><input st-search="mobile"/></th>
+                <th><input st-search="nationalCode"/></th>
+                <th><input st-search="date"/></th>
+                <th ng-hide="vm.role === 'user'"><input st-search="accountNumber"/></th>
                 <th><input st-search="email"/></th>
+                <th><input st-search="rate"/></th>
                 <th><input st-search="asset"/></th>
-                <th><input st-search="active"/></th>
+                <th>
+                    <select st-search="active">
+                        <option value="">همه</option>
+                        <option value="{{true}}">فعال</option>
+                        <option value="{{false}}">غیرفعال</option>
+                    </select>
+                </th>
                 <th><input st-search="sharingCode"/></th>
                 <th><input st-search="challengerCode"/></th>
                 <th></th>
@@ -27,7 +41,11 @@
             <tr ng-repeat="row in vm.users">
                 <td>{{row.name}}</td>
                 <td>{{row.mobile}}</td>
+                <td>{{row.nationalCode}}</td>
+                <td>{{row.date | jalaali:'jYYYY/jMM/jDD'}}</td>
+                <td style="direction: ltr" ng-hide="vm.role === 'user'">{{row.accountNumber}}</td>
                 <td>{{row.email}}</td>
+                <td>{{row.rate}} / 10</td>
                 <td>{{row.asset}}</td>
                 <td>
                     <switch id="enabled" name="enabled" ng-model="row.active"
@@ -36,7 +54,7 @@
                 <td>{{row.sharingCode}}</td>
                 <td>{{row.challengerCode}}</td>
                 <td>
-                    <button class="btn btn-xs btn-danger" ng-click="vm.delete(row)">
+                    <button class="btn btn-xs btn-danger" ng-click="vm.remove(row)">
                         <i class="fa fa-trash-o fa-lg"></i>
                     </button>
                 </td>
@@ -52,7 +70,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="8" class="text-center" st-pagination="" st-displayed-pages="" st-items-by-page="40"
+                <td colspan="12" class="text-center" st-pagination="" st-displayed-pages="" st-items-by-page="40"
                     st-template="pagination.html"></td>
             </tr>
             </tfoot>

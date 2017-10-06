@@ -38,14 +38,14 @@ export function index(req, res) {
   let sort = false;
 
   if(_.has(qs, 'search.predicateObject')) {
+    let props = ['active', 'rate', 'date'];
     for(let key in qs.search.predicateObject) {
       if(qs.search.predicateObject.hasOwnProperty(key) && key !== 'role') {
         let value = qs.search.predicateObject[key];
-        qs.search.predicateObject[key] = new RegExp(value, 'i');
+        qs.search.predicateObject[key] = _.includes(props, key) ? value : new RegExp(value, 'i');
       }
     }
   }
-
   if(_.get(qs, 'sort.predicate', false)) {
     sort = {};
     sort[_.get(qs, 'sort.predicate', 'name')] = _.get(qs, 'sort.reverse') === 'true' ? -1 : 1;

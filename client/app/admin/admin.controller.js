@@ -62,16 +62,16 @@ export default class AdminController {
         url: '/admin/notifications'
       },
       {
-        title: 'گزارشات',
-        state: 'admin.reports',
-        icon: 'fa fa-database',
-        url: '/admin/reports/'
-      },
-      {
         title: 'تسویه حساب',
         state: 'admin.settlement',
         icon: 'fa fa-check-square-o',
         url: '/admin/settlement'
+      },
+      {
+        title: 'گزارشات',
+        state: 'admin.reports',
+        icon: 'fa fa-database',
+        url: '/admin/reports/'
       }
     ];
   }
