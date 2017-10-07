@@ -77,10 +77,11 @@ export function index(req, res) {
   let sort = false;
 
   if(_.has(qs, 'search.predicateObject')) {
+    let props = ['date', 'cost'];
     for(let key in qs.search.predicateObject) {
       if(qs.search.predicateObject.hasOwnProperty(key)) {
         let value = qs.search.predicateObject[key];
-        qs.search.predicateObject[key] = new RegExp(value, 'i');
+        qs.search.predicateObject[key] = _.includes(props, key) ? value : new RegExp(value, 'i');
       }
     }
   }
