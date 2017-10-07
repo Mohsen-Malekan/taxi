@@ -45,6 +45,7 @@
     "morgan": "^1.8.0",
     "multer": "^1.3.0",
     "ng-file-upload": "^12.2.13",
+    "ngmap": "^1.18.4",
     "node-zopfli": "^2.0.2",
     "passport": "~0.3.0",
     "passport-google-oauth20": "^1.0.0",
