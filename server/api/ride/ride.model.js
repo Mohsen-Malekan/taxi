@@ -19,9 +19,9 @@ let RideSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  srcLat: Number,
-  srcLng: Number,
-  destinations: [{}],
+  src: [Number],
+  des: [[Number]],
+  loc: [Number],
   distance: Number,
   date: {
     type: Date,

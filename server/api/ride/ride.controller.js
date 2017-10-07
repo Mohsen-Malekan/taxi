@@ -103,8 +103,8 @@ export function index(req, res) {
       handleError(res)(err);
     }
     return query
-      .populate('user', 'name')
-      .populate('driver', 'name')
+      .populate('user', 'name mobile')
+      .populate('driver', 'name mobile')
       .skip(qs.pagination.start / qs.pagination.number * qs.pagination.number)
       .limit(Number(qs.pagination.number))
       .exec()
@@ -126,8 +126,8 @@ export function index(req, res) {
 // Gets a single Ride from the DB
 export function show(req, res) {
   return Ride.findById(req.params.id)
-    .populate('user', 'name')
-    .populate('driver', 'name').exec()
+    .populate('user', 'name mobile')
+    .populate('driver', 'name mobile').exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
