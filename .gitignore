@@ -8,4 +8,4 @@ dist
 /server/config/local.env.js
 npm-debug.log
 coverage
-/assets/reports
+client/assets/reports
