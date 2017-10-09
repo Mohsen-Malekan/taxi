@@ -2,7 +2,7 @@
 
 import moment from 'moment-jalaali';
 
-moment.loadPersian();
+moment.loadPersian({dialect: 'persian-modern'});
 
 export default function jalaali() {
   return function(date, format, isUTC) {

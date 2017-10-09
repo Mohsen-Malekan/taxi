@@ -56,35 +56,50 @@ export default function seedDatabaseIfNeeded() {
               user: user.id,
               date: Date.now(),
               status: 'finished',
-              cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+              cost: Math.floor(Math.random() * (15000 - 3000) + 3000),
+              src: [36.290589, 59.594129],
+              loc: [36.291119, 59.585755],
+              des: [[36.298548, 59.509387]]
             },
             {
               driver: driver.id,
               user: user.id,
               date: Date.now(),
               status: 'finished',
-              cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+              cost: Math.floor(Math.random() * (15000 - 3000) + 3000),
+              src: [36.290589, 59.594129],
+              loc: [36.291119, 59.585755],
+              des: [[36.298548, 59.509387]]
             },
             {
               driver: driver.id,
               user: user.id,
               date: Date.now(),
               status: 'finished',
-              cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+              cost: Math.floor(Math.random() * (15000 - 3000) + 3000),
+              src: [36.290589, 59.594129],
+              loc: [36.291119, 59.585755],
+              des: [[36.298548, 59.509387]]
             },
             {
               driver: driver.id,
               user: user.id,
               date: Date.now(),
               status: 'finished',
-              cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+              cost: Math.floor(Math.random() * (15000 - 3000) + 3000),
+              src: [36.290589, 59.594129],
+              loc: [36.291119, 59.585755],
+              des: [[36.298548, 59.509387]]
             },
             {
               driver: driver.id,
               user: user.id,
               date: Date.now(),
               status: 'finished',
-              cost: Math.floor(Math.random() * (15000 - 3000) + 3000)
+              cost: Math.floor(Math.random() * (15000 - 3000) + 3000),
+              src: [36.290589, 59.594129],
+              loc: [36.291119, 59.585755],
+              des: [[36.298548, 59.509387]]
             })
           );
       })

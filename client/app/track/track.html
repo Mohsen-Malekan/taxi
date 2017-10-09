@@ -1,17 +1,57 @@
 <div class="row">
-    <!--<script src="https://maps.google.com/maps/api/js?libraries=placeses,visualization,drawing,geometry,places"></script>-->
     <div class="col-sm-12" ng-show="!vm.ride">
         <h1>لینک نامعتبر</h1>
     </div>
     <div class="col-sm-12" ng-show="!!vm.ride">
-        <h1>track</h1>
+        <form>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <small>مشتری</small>
+                    <h3 style="margin-top: 2px">
+                        {{vm.ride.user.name}}
+                        <small class="label label-info" style="font-size: 60%">
+                            <i class="fa fa-mobile"></i>
+                            {{vm.ride.user.mobile}}</small>
+                    </h3>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <small>راننده</small>
+                    <h3 style="margin-top: 2px">
+                        {{vm.ride.driver.name}}
+                        <small class="label label-info" style="font-size: 60%">
+                            <i class="fa fa-mobile"></i>
+                            {{vm.ride.driver.mobile}}</small>
+                    </h3>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <p>
+                    <small style="padding-left: 12px">زمان</small>
+                    <span class="label label-primary"
+                                              style="direction: ltr">{{vm.ride.date | jalaali:'jYYYY/jMM/jDD HH:mm'}}</span>
+                </p>
+                <p>
+                    <small style="padding-left: 1px">وضعیت</small>
+                    <span class="label label-warning">{{vm.status[vm.ride.status]}}</span>
+                </p>
+            </div>
+        </form>
     </div>
     <div class="col-sm-12" ng-show="!!vm.ride">
+        <hr style="margin:8px auto">
         <div map-lazy-load="https://maps.google.com/maps/api/js" map-lazy-load-params="{{vm.googleMapsUrl}}">
-            <ng-map id="map" zoom="16" center="[0, 0]">
-                <marker position="current-position" center="{{vm.coords}}" centered="true"
-                        title="{{vm.ride.user.name}}"
-                        icon="{{vm.currentPositionIcon}}"></marker>
+            <ng-map id="map" zoom="13" center="[0, 0]">
+                <marker position="{{vm.ride.src}}" title="مبدا"></marker>
+                <marker position="{{vm.ride.loc}}" center="{{vm.coords}}" centered="true"
+                        title="{{vm.ride.user.name}}" icon="{{vm.currentPositionIcon}}"></marker>
+                <marker ng-repeat="des in vm.ride.des" position="{{des}}" title="مقصد {{$index+1}}"></marker>
+                <directions
+                        panel="directions-panel"
+                        origin="{{vm.ride.src}}"
+                        destination="{{vm.ride.dest[vm.ride.dest.length - 1]}}">
+                </directions>
             </ng-map>
         </div>
     </div>
