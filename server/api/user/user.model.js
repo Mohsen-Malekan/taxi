@@ -52,6 +52,8 @@ let UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  status: String,
+  loc: {},
   activationCode: String,
   sharingCode: String,
   challengerCode: String,

@@ -1,21 +1,23 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
-import routing from './admin-register.routes';
+import routing from './admin-notifications.routes';
+import 'angular-socket-io';
 
-class AdminRegisterController {
-  user = {
-    name: '',
-    mobile: '',
-    password: ''
-  };
-  errors = {};
-  submitted = false;
-  test = '';
-
+class AdminNotificationsController {
   /*@ngInject*/
-  constructor($http, $state) {
+  constructor($http, socket) {
     this.$http = $http;
-    this.$state = $state;
+    this.socket = socket;
+
+    socket.socket.emit('CALL', 'client');
+
+    socket.socket.on('CALL_BACK', data => {
+      console.log('CALL_BACK>', data);
+    });
+  }
+
+  $onDestroy() {
+    this.socket.socket.removeAllListeners();
   }
 
   register(form) {
@@ -45,11 +47,11 @@ class AdminRegisterController {
   }
 }
 
-export default angular.module('taxiApp.admin.register', [uiRouter])
+export default angular.module('taxiApp.admin.notifications', [uiRouter, 'btford.socket-io'])
   .config(routing)
-  .component('adminRegister', {
-    template: require('./admin-register.html'),
-    controller: AdminRegisterController,
+  .component('adminNotifications', {
+    template: require('./admin-notifications.html'),
+    controller: AdminNotificationsController,
     controllerAs: 'vm'
   })
   .name;

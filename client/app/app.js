@@ -26,11 +26,12 @@ import main from './main/main.component';
 import track from './track/track.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
+import socket from '../components/socket/socket.service';
 
 import './app.css';
 
 angular.module('taxiApp', [ngCookies, ngResource, ngSanitize, uiRouter, uiBootstrap, loadingBar, 'uiSwitch', _Auth, account,
-  admin, 'validation.match', navbar, pagination, footer, main, constants, util, track
+  socket, admin, 'validation.match', navbar, pagination, footer, main, constants, util, track
 ])
   .config(routeConfig)
   .directive('mongooseError', function() {
