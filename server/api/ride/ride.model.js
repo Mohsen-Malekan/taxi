@@ -51,7 +51,8 @@ let RideSchema = new mongoose.Schema({
   isSettled: {
     type: Boolean,
     default: false
-  }
+  },
+  subscribers: [String]
 });
 
 /**

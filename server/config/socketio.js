@@ -10,7 +10,7 @@ function onDisconnect(/*socket*/) {
 }
 
 // When the user connects.. perform this
-function onConnect(socket) {
+function onConnect(socket, socketio) {
   // When the client emits 'info', this listens and executes
   socket.on('info', data => {
     socket.log(JSON.stringify(data, null, 2));
@@ -18,6 +18,7 @@ function onConnect(socket) {
 
   // Insert sockets below
   // require('../api/thing/thing.socket').register(socket);
+  require('../api/ride/ride.socket').register(socket, socketio);
 }
 
 export default function(socketio) {
@@ -52,7 +53,7 @@ export default function(socketio) {
     });
 
     // Call onConnect.
-    onConnect(socket);
+    onConnect(socket, socketio);
     socket.log('CONNECTED');
   });
 }
