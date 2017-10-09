@@ -19,9 +19,21 @@ let RideSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  src: [Number],
+  src: {
+    type: {type: String},
+    coordinates: [Number],
+  },
   des: [[Number]],
-  loc: [Number],
+  loc: {
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: {
+      type: Array,
+      default: [0, 0]
+    },
+  },
   distance: Number,
   date: {
     type: Date,

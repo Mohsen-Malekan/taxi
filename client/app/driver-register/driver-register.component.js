@@ -21,7 +21,7 @@ class DriverRegisterController {
 
   register(form) {
     this.submitted = true;
-    this.user.password = 'zxcv123fdsa654qwer789';
+    this.user.password = '21';
 
     if(form.$valid) {
       this.Upload.upload({

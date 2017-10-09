@@ -24,7 +24,10 @@ let UserSchema = new Schema({
     type: String,
     required: false
   },
-  accountNumber: String,
+  accountNumber: {
+    type: String,
+    default: ''
+  },
   role: {
     type: String,
     default: 'user',
@@ -52,23 +55,39 @@ let UserSchema = new Schema({
     type: Boolean,
     default: false
   },
-  status: String,
-  loc: {},
-  activationCode: String,
-  sharingCode: String,
-  challengerCode: String,
+  driverState: {
+    type: String,
+    default: ''
+  },
+  appId: {
+    type: String,
+    default: ''
+  },
+  location: {
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: {
+      type: Array,
+      default: [0, 0]
+    },
+  },
+  activationCode: {
+    type: String,
+    default: '78436'
+  },
+  sharingCode: {
+    type: String,
+    default: ''
+  },
+  challengerCode: {
+    type: String,
+    default: ''
+  },
   lastState: {
     type: String,
-    default: '0',
-    maxLength: 1
-  },
-  lastLat: {
-    type: Number,
-    default: 0
-  },
-  lastLng: {
-    type: Number,
-    default: 0
+    default: ''
   },
   provider: String,
   salt: String

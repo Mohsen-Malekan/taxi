@@ -8,6 +8,7 @@ import request from 'request';
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
+import jsonpatch from 'fast-json-patch';
 
 const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
 
@@ -24,6 +25,39 @@ function handleError(res, statusCode) {
   return function(err) {
     console.log('handleError> ', err);
     return res.status(statusCode).send(err);
+  };
+}
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if(!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
+
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if(entity) {
+      return res.status(statusCode).json(entity);
+    }
+    return null;
+  };
+}
+
+function patchUpdates(patches) {
+  return function(entity) {
+    try {
+      // eslint-disable-next-line prefer-reflect
+      jsonpatch.apply(entity, patches, /*validate*/ true);
+    } catch(err) {
+      return Promise.reject(err);
+    }
+
+    return entity.save();
   };
 }
 
@@ -247,6 +281,18 @@ export function show(req, res, next) {
     .catch(err => next(err));
 }
 
+// Updates an existing Ride in the DB
+export function patch(req, res) {
+  if(req.body._id) {
+    Reflect.deleteProperty(req.body, '_id');
+  }
+  return User.findById(req.params.id).exec()
+    .then(handleEntityNotFound(res))
+    .then(patchUpdates(req.body))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 /**
  * Deletes a user
  * restriction: 'admin'
@@ -279,6 +325,43 @@ export function changePassword(req, res) {
       } else {
         return res.status(403).end();
       }
+    });
+}
+
+/**
+ * Change a users password
+ */
+export function edit(req, res) {
+  let userId = req.user._id;
+
+  return User.findById(userId).exec()
+    .then(user => {
+      let props = [
+        // 'name',
+        'email',
+        // 'mobile',
+        // 'nationalCode',
+        'accountNumber',
+        // 'role',
+        // 'date',
+        // 'asset',
+        // 'rate',
+        // 'active',
+        'driverState',
+        'appId',
+        'location',
+        // 'sharingCode',
+        // 'challengerCode',
+        'lastState'
+      ];
+      _.each(props, prop => {
+        user[prop] = req.body[prop] || user[prop];
+      });
+      return user.save()
+        .then(() => {
+          res.json(_.pick(user, props));
+        })
+        .catch(validationError(res));
     });
 }
 
@@ -317,6 +400,7 @@ export function getActivationCode(req, res) {
  */
 export function confirm(req, res) {
   let userId = req.user._id;
+  let appId = req.body.appId;
 
   return User.findById(userId, '-salt -password').exec()
     .then(user => {
@@ -325,8 +409,9 @@ export function confirm(req, res) {
       }
       if(user.activationCode === req.body.activationCode) {
         user.active = true;
+        user.appId = appId;
         return user.save()
-          .then(() => res.status(204).end())
+          .then(() => res.json({}))
           .catch(handleError(res));
       }
       return res.status(400).end();

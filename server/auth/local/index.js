@@ -23,13 +23,20 @@ router.post('/', function(req, res, next) {
       'name',
       'email',
       'mobile',
+      'nationalCode',
+      'accountNumber',
       'role',
-      'active',
-      'lastState',
-      'lastLat',
-      'lastLng',
+      'date',
       'asset',
-      'sharingCode']);
+      'rate',
+      'active',
+      'driverState',
+      'appId',
+      'location',
+      'sharingCode',
+      'challengerCode',
+      'lastState'
+    ]);
     userInfo.id = user._id;
 
     let token = signToken(user._id, user.role);
@@ -41,7 +48,6 @@ router.post('/', function(req, res, next) {
       }
       res.json({ token, user : userInfo });
     });
-
   })(req, res, next);
 });
 
