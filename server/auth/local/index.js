@@ -4,7 +4,9 @@ import express from 'express';
 import passport from 'passport';
 import {signToken} from '../auth.service';
 import _ from 'lodash';
+import request from 'request';
 
+const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
 let router = express.Router();
 
 router.post('/', function(req, res, next) {
@@ -31,7 +33,15 @@ router.post('/', function(req, res, next) {
     userInfo.id = user._id;
 
     let token = signToken(user._id, user.role);
-    res.json({ token, user : userInfo });
+
+    request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (err, response, body) => {
+      if(err) {
+        console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+        return res.status(500).send(err);
+      }
+      res.json({ token, user : userInfo });
+    });
+
   })(req, res, next);
 });
 
