@@ -14,7 +14,7 @@
                 <th st-sort="finishedAt">اتمام</th>
                 <th st-sort="duration">مدت زمان</th>
                 <th st-sort="cost">هزینه</th>
-                <th st-sort="paymentMethod">روش پرداخت</th>
+                <th st-sort="paymentMethods">روش پرداخت</th>
                 <th st-sort="rate">امتیاز</th>
                 <th st-sort="description">توضیحات</th>
             </tr>
@@ -30,7 +30,7 @@
                 <th><input st-search="finishedAt" type="search" /></th>
                 <th><input st-search="duration" type="search" /></th>
                 <th><input st-search="cost" type="search" /></th>
-                <th><input st-search="paymentMethod" type="search" /></th>
+                <th><input st-search="paymentMethods" type="search" /></th>
                 <th><input st-search="rate" type="search" /></th>
                 <th><input st-search="description" type="search" /></th>
             </tr>
@@ -48,7 +48,7 @@
                 <td>{{row.finishedAt | jalaali:'jYYYY/jMM/jDD HH:mm:ss'}}</td>
                 <td>{{row.duration}}</td>
                 <td>{{row.cost}}</td>
-                <td>{{row.paymentMethod}}</td>
+                <td>{{row.paymentMethods}}</td>
                 <td>{{row.rate}}</td>
                 <td>{{row.description}}</td>
             </tr>

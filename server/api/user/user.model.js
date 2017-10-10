@@ -89,7 +89,10 @@ let UserSchema = new Schema({
     type: String,
     default: ''
   },
-  provider: String,
+  provider: {
+    type: String,
+    default: 'local'
+  },
   salt: String
 });
 
@@ -392,5 +395,6 @@ UserSchema.statics.findByIdAndToggle = function(id, prop = 'active') {
     });
 };
 
+UserSchema.index({location: '2dsphere'});
 registerEvents(UserSchema);
 export default mongoose.model('User', UserSchema);

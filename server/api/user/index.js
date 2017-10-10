@@ -31,6 +31,6 @@ router.post('/admin', auth.hasRole('admin'), controller.createAdmin);
 router.get('/confirm', auth.isAuthenticated(), controller.getActivationCode);
 router.post('/confirm', auth.isAuthenticated(), controller.confirm);
 router.get('/:id', auth.hasRole('admin'), controller.show);
-router.patch('/:id', auth.isAuthenticated(), controller.patch);
+// router.patch('/:id', auth.isAuthenticated(), controller.patch);
 
 module.exports = router;

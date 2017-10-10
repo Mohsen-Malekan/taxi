@@ -134,7 +134,6 @@ export function toggleActivation(req, res) {
  */
 export function create(req, res) {
   let newUser = new User(req.body);
-  newUser.provider = 'local';
   newUser.role = 'user';
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
   newUser.activationCode = randomstring.generate({
@@ -177,10 +176,12 @@ export function create(req, res) {
 export function createDriver(req, res) {
   const DEFAULT_PASS = 'zxcv123fdsa654qwer789';
   let newUser = new User(req.body);
-  newUser.provider = 'local';
   newUser.role = 'driver';
   newUser.sharingCode = randomstring.generate(6).toUpperCase();
-  // newUser.activationCode = randomstring.generate({length : 5, charset : 'numeric'}).toString();
+  newUser.activationCode = randomstring.generate({
+    length: 5,
+    charset: 'numeric'
+  }).toString();
   newUser.active = true;
   newUser.password = DEFAULT_PASS;
   newUser.save()
@@ -227,7 +228,6 @@ export function createDriver(req, res) {
  */
 export function createAdmin(req, res) {
   let newUser = new User(req.body);
-  newUser.provider = 'local';
   newUser.role = 'admin';
   newUser.active = true;
   newUser.sharingCode = randomstring.generate(6).toUpperCase();

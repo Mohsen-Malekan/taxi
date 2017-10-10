@@ -20,10 +20,15 @@ let RideSchema = new mongoose.Schema({
     ref: 'User'
   },
   src: {
-    type: {type: String},
-    coordinates: [Number],
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: {
+      type: Array,
+      default: [0, 0]
+    }
   },
-  des: [[Number]],
   loc: {
     type: {
       type: String,
@@ -32,19 +37,51 @@ let RideSchema = new mongoose.Schema({
     coordinates: {
       type: Array,
       default: [0, 0]
-    },
+    }
   },
-  distance: Number,
+  des: [{
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: {
+      type: Array,
+      default: [0, 0]
+    }
+  }],
+  distance: {
+    type: Number,
+    default: 0
+  },
   date: {
     type: Date,
     default: Date.now()
   },
-  arrivedAt: Date,
-  startAt: Date,
-  finishedAt: Date,
-  duration: Number,
-  cost: Number,
-  paymentMethod: String,
+  arrivedAt: {
+    type: Date,
+    default: Date.now()
+  },
+  startAt: {
+    type: Date,
+    default: Date.now()
+  },
+  finishedAt: {
+    type: Date,
+    default: Date.now()
+  },
+  duration: {
+    type: Number,
+    default: 0
+  },
+  cost: {
+    type: Number,
+    default: 0
+  },
+  paymentMethod: {
+    type: String,
+    default: shared.paymentMethods[0],
+    enum: shared.paymentMethods
+  },
   rate: {
     type: Number,
     min: 0,
@@ -53,7 +90,8 @@ let RideSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    maxlength: [200, 'تعداد کاراکترهای وارد شده، بیش از حد مجاز ({MAXLENGTH}) است.']
+    maxlength: [200, 'تعداد کاراکترهای وارد شده، بیش از حد مجاز ({MAXLENGTH}) است.'],
+    default: ''
   },
   status: {
     type: String,
@@ -64,7 +102,10 @@ let RideSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  subscribers: [String]
+  subscribers: {
+    type: Array,
+    default: []
+  }
 });
 
 /**
