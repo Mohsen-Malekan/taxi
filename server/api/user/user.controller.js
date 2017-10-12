@@ -150,17 +150,7 @@ export function create(req, res) {
       let token = jwt.sign({_id: user._id}, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      let userInfo = _.pick(user, [
-        'name',
-        'email',
-        'mobile',
-        'role',
-        'active',
-        'lastState',
-        'lastLat',
-        'lastLng',
-        'asset',
-        'sharingCode']);
+      let userInfo = _.pick(user, config.userFields);
       userInfo.id = user._id;
       res.json({
         token,
@@ -203,17 +193,7 @@ export function createDriver(req, res) {
       let token = jwt.sign({_id: user._id}, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      let userInfo = _.pick(user, [
-        'name',
-        'email',
-        'mobile',
-        'role',
-        'active',
-        'lastState',
-        'lastLat',
-        'lastLng',
-        'asset',
-        'sharingCode']);
+      let userInfo = _.pick(user, config.userFields);
       userInfo.id = user._id;
       res.json({
         token,
@@ -245,17 +225,7 @@ export function createAdmin(req, res) {
       let token = jwt.sign({_id: user._id}, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      let userInfo = _.pick(user, [
-        'name',
-        'email',
-        'mobile',
-        'role',
-        'active',
-        'lastState',
-        'lastLat',
-        'lastLng',
-        'asset',
-        'sharingCode']);
+      let userInfo = _.pick(user, config.userFields);
       userInfo.id = user._id;
       res.json({
         token,
@@ -430,7 +400,7 @@ export function me(req, res, next) {
       if(!user) {
         return res.status(401).end();
       }
-      res.json(user);
+      res.json(_.pick(user, config.userFields));
     })
     .catch(err => next(err));
 }

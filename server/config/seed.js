@@ -102,6 +102,21 @@ export default function seedDatabaseIfNeeded() {
     //   .then(() => console.log('users added'))
     //   .catch(err => console.log('error adding users', err));
 
+    // User.create(
+    //   {
+    //     name: 'driver2',
+    //     email: 'driver2@mail.com',
+    //     mobile: '09127559707',
+    //     nationalCode: '0946428615',
+    //     password: 'zaq1`xsw21',
+    //     role: 'driver',
+    //     sharingCode: 'LKJHG',
+    //     active: true
+    //   }
+    // )
+    //   .then(() => console.log('users added'))
+    //   .catch(err => console.log('error adding users', err));
+
     // Ride.find({}).remove()
     //   .then(() => User.findOne({role: 'user'}))
     //   .then(user => User.findOne({role: 'driver'})

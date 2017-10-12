@@ -5,6 +5,9 @@ import passport from 'passport';
 import {signToken} from '../auth.service';
 import _ from 'lodash';
 import request from 'request';
+import User from '../../api/user/user.model';
+import randomstring from 'randomstring';
+import shared from '../../config/environment/shared';
 
 const SMS_URL = 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/';
 let router = express.Router();
@@ -16,37 +19,34 @@ router.post('/', function(req, res, next) {
       return res.status(401).json(error);
     }
     if(!user) {
-      return res.status(404).json({message : 'درحال حاضر نمیتوانید وارد شوید. لطفا دوباره تلاش کنید'});
+      return res.status(404).json({message: 'درحال حاضر نمیتوانید وارد شوید. لطفا دوباره تلاش کنید'});
     }
 
-    let userInfo = _.pick(user, [
-      'name',
-      'email',
-      'mobile',
-      'nationalCode',
-      'accountNumber',
-      'role',
-      'date',
-      'asset',
-      'rate',
-      'active',
-      'driverState',
-      'appId',
-      'location',
-      'sharingCode',
-      'challengerCode',
-      'lastState'
-    ]);
+    let userInfo = _.pick(user, shared.userFields);
     userInfo.id = user._id;
+    let activationCode = randomstring.generate({
+      length: 5,
+      charset: 'numeric'
+    }).toString();
 
-    let token = signToken(user._id, user.role);
-
-    request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${user.activationCode}`, (err, response, body) => {
+    User.findByIdAndUpdate(user._id, {$set: {activationCode}}, (err, oldUser) => {
       if(err) {
-        console.log('sms error:      ', error || 'none'); // Print the error if one occurred
+        console.log('user update error: ', err || 'none');
         return res.status(500).send(err);
       }
-      res.json({ token, user : userInfo });
+
+      let token = signToken(user._id, user.role);
+
+      request(`${SMS_URL}send.json?receptor=${user.mobile}&sender=10004346&message=${activationCode}`, (err, response, body) => {
+        if(err) {
+          console.log('sms error: ', err || 'none'); // Print the error if one occurred
+          return res.status(500).send(err);
+        }
+        res.json({
+          token,
+          user: userInfo
+        });
+      });
     });
   })(req, res, next);
 });

@@ -16,6 +16,9 @@ import mongoXlsx from 'mongo-xlsx';
 import {Settlement} from './ride.model';
 import _ from 'lodash';
 import moment from 'moment-jalaali';
+import User from '../user/user.model';
+import shared from '../../config/environment/shared';
+import gcm from 'node-gcm';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -150,12 +153,9 @@ export function user(req, res) {
 
 // Gets available Rides from the DB
 export function available(req, res) {
-  // return Ride.findById(req.params.id).exec()
-  //   .then(handleEntityNotFound(res))
-  //   .then(respondWithResult(res))
-  //   .catch(handleError(res));
-  // todo: get available drivers in area from driver's table
-  return res.status(200).json([]);
+  nearDrivers(Number(req.params.lng), Number(req.params.lat))
+    .then(drivers => res.status(200).json(drivers))
+    .catch(handleError);
 }
 
 // Gets Ride's cost from the DB
@@ -169,7 +169,7 @@ export function cost(req, res) {
 
 // Settlement
 export function settlement(req, res) {
-  Settlement.findOne({}, {}, { sort: { date: -1 } }, (err, date) => {
+  Settlement.findOne({}, {}, {sort: {date: -1}}, (err, date) => {
     if(err) {
       return handleError(res)(err);
     }
@@ -255,13 +255,18 @@ export function create(req, res) {
   // todo: send notification to drivers
   // todo: if a driver accepted the ride then return driver info
   // todo: calculate distance, cost and ... before send it to user
-  let driver = {};
+
   let ride = new Ride();
+  ride.user = req.user._id;
+  ride.src = req.body.src;
+  ride.loc = req.body.loc;
+  ride.des = req.body.des;
+  ride.cost = req.body.cost;
   return ride.save()
-    .then(entity => res.status(201).json({
-      entity,
-      driver
-    }))
+    .then(newRide => {
+
+      return newRide;
+    })
     .catch(handleError(res));
 }
 
@@ -299,4 +304,27 @@ export function destroy(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
+}
+
+function nearDrivers(lng, lat) {
+  return User.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng, lat]
+        },
+        query: {
+          role: 'driver',
+          driverState: 'on'
+        },
+        // maxDistance: 2000,
+        limit: 50,
+        spherical: true,
+        distanceField: 'distance'
+      }
+    }
+  ])
+    .exec()
+    .then(drivers => _.map(drivers, _.partialRight(_.pick, _.concat(shared.userFields, 'distance'))));
 }

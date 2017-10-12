@@ -57,7 +57,8 @@ let UserSchema = new Schema({
   },
   driverState: {
     type: String,
-    default: ''
+    default: 'off',
+    enum: shared.driverStates
   },
   appId: {
     type: String,
