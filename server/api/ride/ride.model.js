@@ -114,7 +114,7 @@ let RideSchema = new mongoose.Schema({
 RideSchema
   .pre('save', function(next) {
     // Handle update rates
-    if(!this.isModified('rate')) {
+    if(this.isModified('rate')) {
       let rideRate = this.rate;
       return User.findById(this.driver).exec()
         .then(driver => {

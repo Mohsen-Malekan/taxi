@@ -16,6 +16,7 @@ router.get('/dates', auth.hasRole('admin'), controller.dates);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.upsert);
+router.put('/assign/:id', auth.hasRole('driver'), controller.assign);
 router.patch('/:id', auth.hasRole('admin'), controller.patch);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 

@@ -40,23 +40,22 @@ export default function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(shrinkRay());
-  app.use(bodyParser.urlencoded({ extended : false }));
+  app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(passport.initialize());
 
-
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an
   // oauth 1.0 strategy, and Lusca depends on sessions
   app.use(session({
-    secret            : config.secrets.session,
-    saveUninitialized : true,
-    resave            : false,
-    store             : new MongoStore({
-      mongooseConnection : mongoose.connection,
-      db                 : 'taxi'
+    secret: config.secrets.session,
+    saveUninitialized: true,
+    resave: false,
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      db: 'taxi'
     })
   }));
 
@@ -66,14 +65,14 @@ export default function(app) {
    */
   if(env !== 'test' && !process.env.SAUCE_USERNAME) {
     app.use(lusca({
-      csrf   : false,
-      xframe : 'SAMEORIGIN',
-      hsts   : {
-        maxAge            : 31536000, //1 year, in seconds
-        includeSubDomains : true,
-        preload           : true
+      csrf: false,
+      xframe: 'SAMEORIGIN',
+      hsts: {
+        maxAge: 31536000, //1 year, in seconds
+        includeSubDomains: true,
+        preload: true
       },
-      xssProtection : false
+      xssProtection: false
     }));
   }
 
@@ -82,7 +81,7 @@ export default function(app) {
     const stripAnsi = require('strip-ansi');
     const webpack = require('webpack');
     const makeWebpackConfig = require('../../webpack.make');
-    const webpackConfig = makeWebpackConfig({ DEV : true });
+    const webpackConfig = makeWebpackConfig({DEV: true});
     const compiler = webpack(webpackConfig);
     const browserSync = require('browser-sync').create();
 
@@ -90,22 +89,22 @@ export default function(app) {
      * Run Browsersync and use middleware for Hot Module Replacement
      */
     browserSync.init({
-      open           : false,
-      logFileChanges : false,
-      proxy          : `localhost:${config.port}`,
-      ws             : true,
-      middleware     : [
+      open: false,
+      logFileChanges: false,
+      proxy: `localhost:${config.port}`,
+      ws: true,
+      middleware: [
         webpackDevMiddleware(compiler, {
-          noInfo : false,
-          stats  : {
-            colors  : true,
-            timings : true,
-            chunks  : false
+          noInfo: false,
+          stats: {
+            colors: true,
+            timings: true,
+            chunks: false
           }
         })
       ],
-      port    : config.browserSyncPort,
-      plugins : ['bs-fullscreen-message']
+      port: config.browserSyncPort,
+      plugins: ['bs-fullscreen-message']
     });
 
     /**
@@ -116,9 +115,9 @@ export default function(app) {
       console.log('webpack done hook');
       if(stats.hasErrors() || stats.hasWarnings()) {
         return browserSync.sockets.emit('fullscreen:message', {
-          title   : 'Webpack Error:',
-          body    : stripAnsi(stats.toString()),
-          timeout : 100000
+          title: 'Webpack Error:',
+          body: stripAnsi(stats.toString()),
+          timeout: 100000
         });
       }
       browserSync.reload();

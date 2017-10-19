@@ -5,23 +5,23 @@
 
 'use strict';
 // import Thing from '../api/thing/thing.model';
-import User from '../api/user/user.model';
-import Ride from '../api/ride/ride.model';
+// import User from '../api/user/user.model';
+// import Ride from '../api/ride/ride.model';
 import config from './environment/';
 
-const places = [
-  [36.298567, 59.509377], //home 0
-  [36.302980, 59.570974], //rahnamaei 1
-  [36.290581, 59.594117], //work 2
-  [36.297918, 59.605950], //shohada 3
-  [36.326152, 59.534748], //azadshahr 4
-  [36.321188, 59.630589], //gaaz 5
-  [36.358072, 59.515948], //azad uni 6
-  [36.329960, 59.493394], //sadaf 7
-  [36.336190, 59.512800], //daneshamooz 8
-  [36.310465, 59.513310], //kowsar 9
-  [36.305993, 59.500004], //hashemiye 10
-];
+// const places = [
+//   [36.298567, 59.509377], //home 0
+//   [36.302980, 59.570974], //rahnamaei 1
+//   [36.290581, 59.594117], //work 2
+//   [36.297918, 59.605950], //shohada 3
+//   [36.326152, 59.534748], //azadshahr 4
+//   [36.321188, 59.630589], //gaaz 5
+//   [36.358072, 59.515948], //azad uni 6
+//   [36.329960, 59.493394], //sadaf 7
+//   [36.336190, 59.512800], //daneshamooz 8
+//   [36.310465, 59.513310], //kowsar 9
+//   [36.305993, 59.500004], //hashemiye 10
+// ];
 
 export default function seedDatabaseIfNeeded() {
   if(config.seedDB) {

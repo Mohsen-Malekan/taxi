@@ -5,16 +5,16 @@
 // ===========================
 module.exports = {
   // MongoDB connection options
-  mongo : {
-    uri : 'mongodb://localhost/taxi-test'
+  mongo: {
+    uri: 'mongodb://localhost/taxi-test'
   },
-  sequelize : {
-    uri     : 'sqlite://',
-    options : {
-      logging : false,
-      storage : 'test.sqlite',
-      define  : {
-        timestamps : false
+  sequelize: {
+    uri: 'sqlite://',
+    options: {
+      logging: false,
+      storage: 'test.sqlite',
+      define: {
+        timestamps: false
       }
     }
   }

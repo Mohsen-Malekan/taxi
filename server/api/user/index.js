@@ -1,11 +1,11 @@
 'use strict';
 
 import multer from 'multer';
-let upload = multer({dest: 'uploads/'});
 import {Router} from 'express';
 import * as controller from './user.controller';
 import * as auth from '../../auth/auth.service';
 
+let upload = multer({dest: 'uploads/'});
 let router = new Router();
 
 let fields = [
@@ -31,6 +31,6 @@ router.post('/admin', auth.hasRole('admin'), controller.createAdmin);
 router.get('/confirm', auth.isAuthenticated(), controller.getActivationCode);
 router.post('/confirm', auth.isAuthenticated(), controller.confirm);
 router.get('/:id', auth.hasRole('admin'), controller.show);
-// router.patch('/:id', auth.isAuthenticated(), controller.patch);
+router.patch('/:id', auth.hasRole('admin'), controller.patch);
 
 module.exports = router;

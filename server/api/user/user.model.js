@@ -3,10 +3,13 @@
 import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+import randomstring from 'randomstring';
 import {registerEvents} from './user.events';
 import shared from '../../config/environment/shared';
+import _ from 'lodash';
 
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
+const DEFAULT_PASS = 'zxcv123fdsa654qwer789';
 
 let UserSchema = new Schema({
   name: String,
@@ -35,7 +38,8 @@ let UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    default: DEFAULT_PASS
   },
   date: {
     type: Date,
@@ -57,8 +61,8 @@ let UserSchema = new Schema({
   },
   driverState: {
     type: String,
-    default: 'off',
-    enum: shared.driverStates
+    default: 'off'/*,
+    enum: shared.driverStates*/
   },
   appId: {
     type: String,
@@ -76,11 +80,14 @@ let UserSchema = new Schema({
   },
   activationCode: {
     type: String,
-    default: '78436'
+    default: randomstring.generate({
+      length: 5,
+      charset: 'numeric'
+    }).toString()
   },
   sharingCode: {
     type: String,
-    default: ''
+    default: randomstring.generate(6).toUpperCase()
   },
   challengerCode: {
     type: String,
@@ -111,11 +118,10 @@ UserSchema
     };
   });
 
-// UserSchema
-//   .virtual('id')
-//   .get(function() {
-//     return this._id;
-//   });
+// return userFields
+UserSchema
+  .virtual('userInfo')
+  .get(() => _.pick(this, shared.userFields));
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
@@ -132,14 +138,14 @@ UserSchema
  */
 
 // Validate empty email
-// UserSchema
-//   .path('email')
-//   .validate(function(email) {
-//     if(authTypes.indexOf(this.provider) !== -1) {
-//       return true;
-//     }
-//     return email.length;
-//   }, 'رایانامه را وارد کنید');
+UserSchema
+  .path('email')
+  .validate(function(email) {
+    if(authTypes.indexOf(this.provider) !== -1) {
+      return true;
+    }
+    return email.length;
+  }, 'رایانامه را وارد کنید');
 
 // Validate empty password
 UserSchema
@@ -159,11 +165,11 @@ UserSchema
   }, 'شماره موبایل را وارد کنید');
 
 // Validate empty nationalCode
-// UserSchema
-//   .path('nationalCode')
-//   .validate(function(nationalCode) {
-//     return nationalCode.length;
-//   }, 'کد ملی را وارد کنید');
+UserSchema
+  .path('nationalCode')
+  .validate(function(nationalCode) {
+    return nationalCode.length;
+  }, 'کد ملی را وارد کنید');
 
 // Validate email is not taken
 UserSchema

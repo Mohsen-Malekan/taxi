@@ -20,6 +20,9 @@ import User from '../user/user.model';
 import shared from '../../config/environment/shared';
 import gcm from 'node-gcm';
 
+let senderDriver = new gcm.Sender('AAAAJ0RBioc:APA91bEV4CN4HO7ViIv827m1uWnXhR6RdBsiU2Hrr0ZVX0LJdkQW0ULZfW3acII4fqYYL87z8dile-5IUKATbCjynYWLTiqhaizYiaDEjSsRJbgtn6JuFpiXxeQVUQrqTIAMjUGarl6k');
+let senderUser = new gcm.Sender('AAAAGWLSfjM:APA91bHpXuRj4Y1wSnbqNFEmCmNuej4GUNHnrye1D3ZwiuJzi7db0KlJaHlpFZ_Hf5oMLqsaBSOSQsjZusPu5iVPjuj-nbAMVUqawAZ_jEYOqvA4Jd1G82GMFJtPDUBJerXjHQuLFJAd');
+
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -145,8 +148,9 @@ export function userRides(req, res) {
 
 // Gets a list of user Rides from the DB
 export function user(req, res) {
-  let userId = req.user.id;
-  return Ride.find({userId}).exec()
+  let user = req.user.id;
+  return Ride.find({user})
+    .populate('driver', _.join(shared.userFields, ' ')).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -155,7 +159,7 @@ export function user(req, res) {
 export function available(req, res) {
   nearDrivers(Number(req.params.lng), Number(req.params.lat))
     .then(drivers => res.status(200).json(drivers))
-    .catch(handleError);
+    .catch(handleError(res));
 }
 
 // Gets Ride's cost from the DB
@@ -259,14 +263,35 @@ export function create(req, res) {
   let ride = new Ride();
   ride.user = req.user._id;
   ride.src = req.body.src;
-  ride.loc = req.body.loc;
+  ride.loc = req.body.src;
   ride.des = req.body.des;
-  ride.cost = req.body.cost;
+  ride.cost = req.body.cost || 5000;
+  console.log('ride > ', ride);
   return ride.save()
-    .then(newRide => {
-
-      return newRide;
-    })
+    .then(newRide => nearDrivers(newRide.src.coordinates[0], newRide.src.coordinates[1])
+      .then(drivers => {
+        console.log('newRide > ', newRide);
+        if(!drivers || drivers.length === 0) {
+          return handleError(res, 404)({message: 'راننده ای یافت نشد'});
+        }
+        let appIdList = _.map(drivers, 'appId');
+        console.log(`appIdList ${appIdList}`);
+        let message = new gcm.Message({
+          collapseKey: 'taxi',
+          delayWhileIdle: true,
+          timeToLive: 3,
+          data: newRide
+        });
+        senderDriver.send(message, appIdList, 1, (err, result) => {
+          if(err) {
+            console.log('gcm error> ', err);
+          }
+          console.log('gcm result> ', result);
+        });
+        return newRide;
+      })
+      .catch(handleError(res)))
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
@@ -281,7 +306,59 @@ export function upsert(req, res) {
     setDefaultsOnInsert: true,
     runValidators: true
   }).exec()
+    .then(ride => {
+      if(_.has(req.body, 'status')) {
+        return User.findByIdAndUpdate(ride.driver, {driverState: 'on'}).exec()
+          .then(() => User.findById(ride.user).exec()
+            .then(user => {
+              let message = new gcm.Message({
+                collapseKey: 'taxi',
+                delayWhileIdle: true,
+                timeToLive: 3,
+                data: ride
+              });
+              senderUser.send(message, [user.appId], 1, (err, result) => {
+                if(err) {
+                  console.log('gcm error> ', err);
+                }
+                console.log('gcm result> ', result);
+              });
+              return ride;
+            }));
+      }
+      return ride;
+    })
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
 
+export function assign(req, res) {
+  return Ride.findById(req.params.id).exec()
+    .then(ride => {
+      if(ride.status !== shared.rideStatus[0]) {
+        return Promise.reject('سفر قبلا گرفته شده است');
+      }
+      ride.status = shared.rideStatus[1]; // 'onTheWay'
+      ride.driver = req.body.driver;
+      return ride.save();
+    })
+    .then(ride => User.findByIdAndUpdate(ride.driver, {driverState: 'riding'}).exec()
+      .then(driver => User.findById(ride.user).exec()
+        .then(user => {
+          let message = new gcm.Message({
+            collapseKey: 'taxi',
+            delayWhileIdle: true,
+            timeToLive: 3,
+            data: driver
+          });
+          senderUser.send(message, [user.appId], 1, (err, result) => {
+            if(err) {
+              console.log('gcm error> ', err);
+            }
+            console.log('gcm result> ', result);
+          });
+          return user;
+        })))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

@@ -5,6 +5,7 @@ exports = module.exports = {
   rideStatus: ['searching', 'onTheWay', 'waiting', 'inProgress', 'finished', 'cancelledByUser', 'cancelledByDriver'],
   paymentMethods: ['cash', 'credit'],
   userFields: [
+    'id',
     'name',
     'email',
     'mobile',

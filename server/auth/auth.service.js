@@ -6,7 +6,7 @@ import compose from 'composable-middleware';
 import User from '../api/user/user.model';
 
 var validateJwt = expressJwt({
-  secret : config.secrets.session
+  secret: config.secrets.session
 });
 
 /**
@@ -15,13 +15,13 @@ var validateJwt = expressJwt({
  */
 export function isAuthenticated() {
   return compose()
-    // Validate jwt
+  // Validate jwt
     .use(function(req, res, next) {
       // allow access_token to be passed through query parameter as well
       if(req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = `Bearer ${req.query.access_token}`;
       }
-     // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
+      // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
       if(req.query && typeof req.headers.authorization === 'undefined') {
         req.headers.authorization = `Bearer ${req.cookies.token}`;
       }
@@ -64,8 +64,11 @@ export function hasRole(roleRequired) {
  * Returns a jwt token signed by the app secret
  */
 export function signToken(id, role) {
-  return jwt.sign({ _id : id, role }, config.secrets.session, {
-    expiresIn : '100d'
+  return jwt.sign({
+    _id: id,
+    role
+  }, config.secrets.session, {
+    expiresIn: '5000d'
   });
 }
 
@@ -76,7 +79,7 @@ export function setTokenCookie(req, res) {
   if(!req.user) {
     return res.status(404).send('It looks like you aren\'t logged in, please try again.');
   }
-  var token = signToken(req.user._id, req.user.role);
+  let token = signToken(req.user._id, req.user.role);
   res.cookie('token', token);
   res.redirect('/');
 }
