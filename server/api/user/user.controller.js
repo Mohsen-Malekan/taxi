@@ -107,12 +107,6 @@ export function index(req, res) {
       })
       .catch(handleError(res));
   });
-
-  // return User.find({}, '-salt -password').exec()
-  //   .then(users => {
-  //     res.status(200).json(users);
-  //   })
-  //   .catch(handleError(res));
 }
 
 /**
@@ -154,25 +148,24 @@ export function createDriver(req, res) {
   newUser.role = 'driver';
   newUser.active = true;
   newUser.save()
-    .then(user =>
+    .then(user => {
       _.forEach(req.files, (val, key) => {
         let file = val[0];
         let tempPath = file.path;
-        let ext = _.last(_.split(file.originalname, '.'));
-        let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${key}.${ext}`);
-        return fs.rename(tempPath, targetPath, function(err) {
-          if(err) return handleError(res)(err);
-          return fs.unlink(tempPath, function() {
-            if(err) return handleError(res)(err);
-            return user;
+        // let ext = _.last(_.split(file.originalname, '.'));
+        let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${key}.jpg`);
+        fs.rename(tempPath, targetPath, err => {
+          // if(err) return handleError(res)(err);
+          if(err) console.log('createDriver:rename> ', err);
+          fs.unlink(tempPath, err => {
+            if(err) console.log('createDriver:unlink> ', err);
           });
         });
-      }))
-    .then(user => {
+      });
       let token = jwt.sign({_id: user._id}, config.secrets.session, {
         expiresIn: '5000d'
       });
-      res.json({
+      return res.json({
         token,
         user: user.userInfo
       });
@@ -230,8 +223,16 @@ export function patch(req, res) {
  */
 export function destroy(req, res) {
   return User.findByIdAndRemove(req.params.id).exec()
-    .then(function() {
-      res.status(204).end();
+    .then(user => {
+      _.forEach(['photos[0]', 'photos[1]'], (val, key) => {
+        let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${val}.jpg`);
+        if(fs.existsSync(targetPath)) {
+          fs.unlink(targetPath, err => {
+            if(err) console.error(err);
+          });
+        }
+      });
+      return res.status(204).end();
     })
     .catch(handleError(res));
 }
@@ -322,7 +323,7 @@ export function confirm(req, res) {
 export function me(req, res) {
   let userId = req.user._id;
 
-  return User.findOne({_id: userId}, '-salt -password -activationCode').exec()
+  return User.findById(userId, '-salt -password -activationCode').exec()
     .then(handleEntityNotFound(res))
     .then(user => res.json(user.userInfo))
     .catch(handleError(res));

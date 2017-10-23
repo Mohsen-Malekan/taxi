@@ -9,6 +9,14 @@ import {sendSMS} from '../../api/user/user.utility';
 
 let router = express.Router();
 
+function handleError(res, statusCode) {
+  statusCode = statusCode || 500;
+  return function(err) {
+    console.log('handleError> ', err);
+    return res.status(statusCode).send(err);
+  };
+}
+
 router.post('/', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     err = err || info;
@@ -33,9 +41,9 @@ router.post('/', function(req, res, next) {
             token,
             user: updatedUser.userInfo
           }))
-          .catch(err => res.status(500).send(err));
+          .catch(handleError(res));
       })
-      .catch(error => res.status(500).send(error));
+      .catch(handleError(res));
   })(req, res, next);
 });
 

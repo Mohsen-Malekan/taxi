@@ -121,7 +121,9 @@ UserSchema
 // return userFields
 UserSchema
   .virtual('userInfo')
-  .get(() => _.pick(this, shared.userFields));
+  .get(function() {
+    return _.pick(this, shared.userFields);
+  });
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
