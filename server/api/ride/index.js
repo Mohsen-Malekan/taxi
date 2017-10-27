@@ -10,7 +10,7 @@ router.get('/', auth.hasRole('admin'), controller.index);
 router.get('/user', auth.isAuthenticated(), controller.user);
 router.get('/user/:id', auth.hasRole('admin'), controller.userRides);
 router.get('/available/:lng/:lat', auth.isAuthenticated(), controller.available);
-router.get('/cost/:id', auth.isAuthenticated(), controller.cost);
+// router.get('/cost/:id', auth.isAuthenticated(), controller.cost);
 router.get('/Settlement', auth.hasRole('admin'), controller.settlement);
 router.get('/dates', auth.hasRole('admin'), controller.dates);
 router.get('/:id', auth.isAuthenticated(), controller.show);

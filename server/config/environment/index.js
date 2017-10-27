@@ -50,7 +50,13 @@ var all = {
     clientID: process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL: `${process.env.DOMAIN || ''}/auth/google/callback`
-  }
+  },
+
+  SMS_API: 'https://api.kavenegar.com/v1/7879382B54572F574B4E6C3832754934355048687A773D3D/sms/',
+
+  gcm_driver: 'AAAAJ0RBioc:APA91bEV4CN4HO7ViIv827m1uWnXhR6RdBsiU2Hrr0ZVX0LJdkQW0ULZfW3acII4fqYYL87z8dile-5IUKATbCjynYWLTiqhaizYiaDEjSsRJbgtn6JuFpiXxeQVUQrqTIAMjUGarl6k',
+
+  gcm_user: 'AAAAGWLSfjM:APA91bHpXuRj4Y1wSnbqNFEmCmNuej4GUNHnrye1D3ZwiuJzi7db0KlJaHlpFZ_Hf5oMLqsaBSOSQsjZusPu5iVPjuj-nbAMVUqawAZ_jEYOqvA4Jd1G82GMFJtPDUBJerXjHQuLFJAd'
 };
 
 // Export the config object based on the NODE_ENV

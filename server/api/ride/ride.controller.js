@@ -17,11 +17,8 @@ import {Settlement} from './ride.model';
 import _ from 'lodash';
 import moment from 'moment-jalaali';
 import User from '../user/user.model';
+import {sendNotifDriver, sendNotifUser} from '../user/user.utility';
 import shared from '../../config/environment/shared';
-import gcm from 'node-gcm';
-
-let senderDriver = new gcm.Sender('AAAAJ0RBioc:APA91bEV4CN4HO7ViIv827m1uWnXhR6RdBsiU2Hrr0ZVX0LJdkQW0ULZfW3acII4fqYYL87z8dile-5IUKATbCjynYWLTiqhaizYiaDEjSsRJbgtn6JuFpiXxeQVUQrqTIAMjUGarl6k');
-let senderUser = new gcm.Sender('AAAAGWLSfjM:APA91bHpXuRj4Y1wSnbqNFEmCmNuej4GUNHnrye1D3ZwiuJzi7db0KlJaHlpFZ_Hf5oMLqsaBSOSQsjZusPu5iVPjuj-nbAMVUqawAZ_jEYOqvA4Jd1G82GMFJtPDUBJerXjHQuLFJAd');
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -123,17 +120,14 @@ export function index(req, res) {
       })
       .catch(handleError(res));
   });
-
-  // return Ride.find().exec()
-  //   .then(respondWithResult(res))
-  //   .catch(handleError(res));
 }
 
 // Gets a single Ride from the DB
 export function show(req, res) {
   return Ride.findById(req.params.id)
-    .populate('user', 'name mobile')
-    .populate('driver', 'name mobile').exec()
+    .populate('user', _.join(shared.userFields, ' '))
+    .populate('driver', _.join(shared.userFields, ' '))
+    .exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -141,16 +135,21 @@ export function show(req, res) {
 
 // Gets a list of user Rides from the DB
 export function userRides(req, res) {
-  return Ride.find({userId: req.params.id}).exec()
+  return Ride.find({userId: req.params.id})
+    .populate('user', _.join(shared.userFields, ' '))
+    .populate('driver', _.join(shared.userFields, ' '))
+    .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Gets a list of user Rides from the DB
 export function user(req, res) {
-  let user = req.user.id;
-  return Ride.find({user})
-    .populate('driver', _.join(shared.userFields, ' ')).exec()
+  let userId = req.user.id;
+  return Ride.find({user: userId})
+    .populate('user', _.join(shared.userFields, ' '))
+    .populate('driver', _.join(shared.userFields, ' '))
+    .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -163,13 +162,12 @@ export function available(req, res) {
 }
 
 // Gets Ride's cost from the DB
-export function cost(req, res) {
-  // todo: calculate ride's cost
-  return Ride.findById(req.params.id).exec()
-    .then(handleEntityNotFound(res))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
-}
+// export function cost(req, res) {
+//   return Ride.findById(req.params.id).exec()
+//     .then(handleEntityNotFound(res))
+//     .then(respondWithResult(res))
+//     .catch(handleError(res));
+// }
 
 // Settlement
 export function settlement(req, res) {
@@ -256,42 +254,33 @@ export function dates(req, res) {
 
 // Creates a new Ride in the DB
 export function create(req, res) {
-  // todo: send notification to drivers
-  // todo: if a driver accepted the ride then return driver info
-  // todo: calculate distance, cost and ... before send it to user
+  // send notification to drivers
+  // if a driver accepted the ride then return driver info
+  // calculate distance, cost and ... before send it to user
 
   let ride = new Ride();
   ride.user = req.user._id;
+  ride.driver = '';
   ride.src = req.body.src;
   ride.loc = req.body.src;
   ride.des = req.body.des;
   ride.cost = req.body.cost || 5000;
-  console.log('ride > ', ride);
-  return ride.save()
-    .then(newRide => nearDrivers(newRide.src.coordinates[0], newRide.src.coordinates[1])
-      .then(drivers => {
-        console.log('newRide > ', newRide);
-        if(!drivers || drivers.length === 0) {
-          return handleError(res, 404)({message: 'راننده ای یافت نشد'});
-        }
-        let appIdList = _.map(drivers, 'appId');
-        console.log(`appIdList ${appIdList}`);
-        let message = new gcm.Message({
-          collapseKey: 'taxi',
-          delayWhileIdle: true,
-          timeToLive: 3,
-          data: newRide
-        });
-        senderDriver.send(message, appIdList, 1, (err, result) => {
-          if(err) {
-            console.log('gcm error> ', err);
-          }
-          console.log('gcm result> ', result);
-        });
-        return newRide;
-      })
-      .catch(handleError(res)))
-    .then(respondWithResult(res))
+
+  return nearDrivers(ride.src.coordinates[0], ride.src.coordinates[1])
+    .then(drivers => {
+      if(!drivers || drivers.length === 0) {
+        return handleError(res, 404)({message: 'راننده ای یافت نشد'});
+      }
+
+      return ride.save()
+        .then(newRide => {
+          newRide.user = _.pick(req.user, shared.userFields);
+          let appIds = _.map(drivers, 'appId');
+          return sendNotifDriver(newRide, appIds);
+        })
+        .then(respondWithResult(res))
+        .catch(handleError(res));
+    })
     .catch(handleError(res));
 }
 
@@ -305,60 +294,32 @@ export function upsert(req, res) {
     upsert: true,
     setDefaultsOnInsert: true,
     runValidators: true
-  }).exec()
-    .then(ride => {
-      if(_.has(req.body, 'status')) {
-        return User.findByIdAndUpdate(ride.driver, {driverState: 'on'}).exec()
-          .then(() => User.findById(ride.user).exec()
-            .then(user => {
-              let message = new gcm.Message({
-                collapseKey: 'taxi',
-                delayWhileIdle: true,
-                timeToLive: 3,
-                data: ride
-              });
-              senderUser.send(message, [user.appId], 1, (err, result) => {
-                if(err) {
-                  console.log('gcm error> ', err);
-                }
-                console.log('gcm result> ', result);
-              });
-              return ride;
-            }));
-      }
-      return ride;
-    })
+  })
+    .populate('user')
+    .populate('driver')
+    .exec()
+    .then(ride => sendNotifUser(ride, [ride.user.appId]))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 export function assign(req, res) {
-  return Ride.findById(req.params.id).exec()
+  return Ride.findById(req.params.id)
+    .populate('user')
+    .populate('driver')
+    .exec()
     .then(ride => {
-      if(ride.status !== shared.rideStatus[0]) {
+      if(ride.status !== shared.rideStatus.searching) {
         return Promise.reject('سفر قبلا گرفته شده است');
       }
-      ride.status = shared.rideStatus[1]; // 'onTheWay'
+      ride.status = shared.rideStatus.onTheWay; // 'onTheWay'
       ride.driver = req.body.driver;
-      return ride.save();
+      return ride.save()
+        .then(() => {
+          sendNotifUser(ride.driver, [ride.user.appId]);
+          return _.pick(ride.user, shared.userFields);
+        });
     })
-    .then(ride => User.findByIdAndUpdate(ride.driver, {driverState: 'riding'}).exec()
-      .then(driver => User.findById(ride.user).exec()
-        .then(user => {
-          let message = new gcm.Message({
-            collapseKey: 'taxi',
-            delayWhileIdle: true,
-            timeToLive: 3,
-            data: driver
-          });
-          senderUser.send(message, [user.appId], 1, (err, result) => {
-            if(err) {
-              console.log('gcm error> ', err);
-            }
-            console.log('gcm result> ', result);
-          });
-          return user;
-        })))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -395,7 +356,7 @@ function nearDrivers(lng, lat) {
           role: 'driver',
           driverState: 'on'
         },
-        // maxDistance: 2000,
+        maxDistance: 5000,
         limit: 50,
         spherical: true,
         distanceField: 'distance'

@@ -2,8 +2,19 @@
 
 exports = module.exports = {
   userRoles: ['guest', 'user', 'customer', 'driver', 'admin', 'sysAdmin'],
-  rideStatus: ['searching', 'onTheWay', 'waiting', 'inProgress', 'finished', 'cancelledByUser', 'cancelledByDriver'],
-  paymentMethods: ['cash', 'credit'],
+  rideStatus: {
+    searching: 'searching',
+    onTheWay: 'onTheWay',
+    waiting: 'waiting',
+    inProgress: 'inProgress',
+    finished: 'finished',
+    cancelledByUser: 'cancelledByUser',
+    cancelledByDriver: 'cancelledByDriver'
+  },
+  paymentMethods: {
+    cash: 'cash',
+    credit: 'credit'
+  },
   userFields: [
     'id',
     'name',
@@ -23,5 +34,9 @@ exports = module.exports = {
     'challengerCode',
     'lastState'
   ],
-  driverStates: ['on', 'off', 'riding']
+  driverStates: {
+    on: 'on',
+    off: 'off',
+    riding: 'riding'
+  }
 };

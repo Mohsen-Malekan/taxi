@@ -61,14 +61,14 @@ let UserSchema = new Schema({
   },
   driverState: {
     type: String,
-    default: 'off'/*,
-    enum: shared.driverStates*/
+    default: shared.driverStates.off
   },
   appId: {
     type: String,
     default: ''
   },
   location: {
+    name: String,
     type: {
       type: String,
       default: 'Point'

@@ -20,6 +20,7 @@ let RideSchema = new mongoose.Schema({
     ref: 'User'
   },
   src: {
+    name: String,
     type: {
       type: String,
       default: 'Point'
@@ -30,6 +31,7 @@ let RideSchema = new mongoose.Schema({
     }
   },
   loc: {
+    name: String,
     type: {
       type: String,
       default: 'Point'
@@ -40,6 +42,7 @@ let RideSchema = new mongoose.Schema({
     }
   },
   des: [{
+    name: String,
     type: {
       type: String,
       default: 'Point'
@@ -79,8 +82,7 @@ let RideSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    default: shared.paymentMethods[0],
-    enum: shared.paymentMethods
+    default: shared.paymentMethods.cash
   },
   rate: {
     type: Number,
@@ -95,8 +97,7 @@ let RideSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: shared.rideStatus[0],
-    enum: shared.rideStatus
+    default: shared.rideStatus.searching
   },
   isSettled: {
     type: Boolean,
@@ -121,6 +122,21 @@ RideSchema
           driver.rate = (driver.rate + rideRate) / 2;
           return driver.save().then(() => next());
         });
+    }
+    return next();
+  });
+
+RideSchema
+  .pre('save', function(next) {
+    // Handle update rates
+    if(this.isModified('status')) {
+      if(this.status === shared.rideStatus.onTheWay) {
+        return User.findByIdAndUpdate(this.driver, {driverState: shared.driverStates.riding}).exec()
+          .then(() => next());
+      } else if(this.status === shared.rideStatus.finished || this.status === shared.rideStatus.cancelledByUser || this.status === shared.rideStatus.cancelledByDriver) {
+        return User.findByIdAndUpdate(this.driver, {driverState: shared.driverStates.on}).exec()
+          .then(() => next());
+      }
     }
     return next();
   });
