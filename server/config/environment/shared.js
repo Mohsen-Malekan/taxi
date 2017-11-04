@@ -38,5 +38,19 @@ exports = module.exports = {
     on: 'on',
     off: 'off',
     riding: 'riding'
+  },
+  notificationKeys: {
+    msg: 'msg',
+    info: 'info',
+    success: 'success',
+    warn: 'warn',
+    error: 'error',
+    gift: 'gift',
+    rideRequest: 'rideRequest',
+    rideCancelledByUser: 'rideCancelledByUser',
+    rideCancelledByDriver: 'rideCancelledByDriver',
+    rideFinished: 'rideFinished',
+    driverFound: 'driverFound',
+    arrivedDriver: 'arrivedDriver',
   }
 };

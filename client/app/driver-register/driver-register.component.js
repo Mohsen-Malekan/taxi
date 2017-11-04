@@ -10,6 +10,7 @@ class DriverRegisterController {
     nationalCode: '',
     accountNumber: '',
     email: '',
+    plate: '',
     photos: []
   };
 
@@ -21,7 +22,7 @@ class DriverRegisterController {
 
   register(form) {
     this.submitted = true;
-    this.user.password = '21';
+    this.user.password = 'zxcv123fdsa654qwer789';
 
     if(form.$valid) {
       this.Upload.upload({
@@ -35,6 +36,7 @@ class DriverRegisterController {
             nationalCode: '',
             accountNumber: '',
             email: '',
+            plate: '',
             photos: []
           };
           this.submitted = false;

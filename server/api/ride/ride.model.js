@@ -80,6 +80,10 @@ let RideSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  stoppageTime: {
+    type: Number,
+    default: 0
+  },
   paymentMethod: {
     type: String,
     default: shared.paymentMethods.cash
@@ -106,7 +110,11 @@ let RideSchema = new mongoose.Schema({
   subscribers: {
     type: Array,
     default: []
-  }
+  },
+  rejections: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 /**
@@ -133,7 +141,13 @@ RideSchema
       if(this.status === shared.rideStatus.onTheWay) {
         return User.findByIdAndUpdate(this.driver, {driverState: shared.driverStates.riding}).exec()
           .then(() => next());
+      } else if(this.status === shared.driverStates.waiting) {
+        this.arrivedAt = new Date();
+      } else if(this.status === shared.driverStates.inProgress) {
+        this.startAt = new Date();
       } else if(this.status === shared.rideStatus.finished || this.status === shared.rideStatus.cancelledByUser || this.status === shared.rideStatus.cancelledByDriver) {
+        this.finishedAt = new Date();
+        this.duration = this.finishedAt - this.startAt;
         return User.findByIdAndUpdate(this.driver, {driverState: shared.driverStates.on}).exec()
           .then(() => next());
       }

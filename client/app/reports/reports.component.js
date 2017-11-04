@@ -4,6 +4,7 @@ import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './reports.routes';
 import finished from '../reports-finished/reports-finished.component';
+import running from '../reports-running/reports-running.component';
 import _ from 'lodash';
 
 class ReportsController {
@@ -14,7 +15,8 @@ class ReportsController {
 
   $onInit() {
     let titles = {
-      finished: 'سفرهای انجام شده'
+      finished: 'سفرهای انجام شده',
+      running: 'سفرهای در حال انجام'
     };
     let url = this.$state.href(this.$state.current.name, this.$state.params);
     this.title = titles[_.split(url, '/')[3]] || '';
@@ -32,7 +34,7 @@ class ReportsController {
   // }
 }
 
-export default angular.module('taxiApp.admin.reports', [uiRouter, finished])
+export default angular.module('taxiApp.admin.reports', [uiRouter, finished, running])
   .config(routing)
   .component('reports', {
     template: require('./reports.html'),

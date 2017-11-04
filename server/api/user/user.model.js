@@ -78,6 +78,10 @@ let UserSchema = new Schema({
       default: [0, 0]
     },
   },
+  plate: {
+    type: String,
+    default: ''
+  },
   activationCode: {
     type: String,
     default: randomstring.generate({

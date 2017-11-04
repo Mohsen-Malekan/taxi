@@ -9,14 +9,13 @@
                 <li role="menuitem">
                     <a ui-sref="admin.reports.finished()" ui-sref-opts="{reload:true}">سفرهای تمام شده</a>
                 </li>
-                <li role="menuitem"><a href="#">Another action</a></li>
-                <li role="menuitem"><a href="#">Something else here</a></li>
+                <li role="menuitem">
+                    <a ui-sref="admin.reports.running()" ui-sref-opts="{reload:true}">سفرهای در حال انجام</a>
+                </li>
             </ul>
         </div>
         <span class="lead text-muted">{{vm.title || 'نوع گزارش را انتخاب کنید'}}</span>
     </div>
-    <!--<div class="col-sm-11">
-    </div>-->
 </div>
 <div class="row">
     <div class="col-sm-12">
