@@ -12,29 +12,35 @@
                 <th st-sort="arrivedAt">رسیدن</th>
                 <th st-sort="startAt">شروع</th>
                 <th st-sort="finishedAt">اتمام</th>
-                <th st-sort="stoppageTime">توقف</th>
+                <th st-sort="stoppageTime" style="min-width: 70px">توقف</th>
                 <th st-sort="duration">مدت زمان</th>
                 <th st-sort="cost">هزینه</th>
-                <th st-sort="paymentMethods">روش پرداخت</th>
+                <th st-sort="paymentMethods" style="min-width: 85px">روش پرداخت</th>
                 <th st-sort="rate">امتیاز</th>
                 <th st-sort="description">توضیحات</th>
             </tr>
             <tr>
-                <th><input st-search="user" type="search" /></th>
-                <th><input st-search="driver" type="search" /></th>
-                <th><input st-search="src" type="search" /></th>
-                <th><input st-search="destinations" type="search" /></th>
-                <th><input st-search="distance" type="search" /></th>
-                <th><input st-search="date" type="search" /></th>
-                <th><input st-search="arrivedAt" type="search" /></th>
-                <th><input st-search="startAt" type="search" /></th>
-                <th><input st-search="finishedAt" type="search" /></th>
-                <th><input st-search="stoppageTime" type="search" /></th>
-                <th><input st-search="duration" type="search" /></th>
-                <th><input st-search="cost" type="search" /></th>
-                <th><input st-search="paymentMethods" type="search" /></th>
-                <th><input st-search="rate" type="search" /></th>
-                <th><input st-search="description" type="search" /></th>
+                <th><input class="input-sm form-control" type="search" st-search="user"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="driver"/></th>
+                <th></th>
+                <th></th>
+                <th><input class="input-sm form-control" type="search" st-search="distance"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="date"/></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th><input class="input-sm form-control" type="number" st-search="cost"/></th>
+                <th>
+                    <select class="input-sm form-control" st-search="paymentMethod">
+                        <option value="">همه</option>
+                        <option value="cash">نقدی</option>
+                        <option value="credit">اعتباری</option>
+                    </select>
+                </th>
+                <th><input class="input-sm form-control" type="number" st-search="rate"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="description"/></th>
             </tr>
             </thead>
             <tbody ng-show="!vm.isLoading">
@@ -44,7 +50,8 @@
                 <td>
                     <span class="label label-info">{{row.src.name}}</span></td>
                 <td>
-                    <span ng-repeat="des in row.des" class="label label-primary" style="margin-left: 2px">{{des.name}}</span>
+                    <span ng-repeat="des in row.des" class="label label-primary"
+                          style="margin-left: 2px">{{des.name}}</span>
                 </td>
                 <td>{{row.distance}}</td>
                 <td>{{row.date | jalaali:'jYYYY/jMM/jDD'}}</td>
@@ -54,7 +61,7 @@
                 <td>{{row.stoppageTime}} دقیقه</td>
                 <td>{{row.duration}}</td>
                 <td>{{row.cost}}</td>
-                <td>{{row.paymentMethods}}</td>
+                <td>{{row.paymentMethod === 'credit' ? 'اعتباری' : 'نقدی'}}</td>
                 <td>{{row.rate}}</td>
                 <td>{{row.description}}</td>
             </tr>

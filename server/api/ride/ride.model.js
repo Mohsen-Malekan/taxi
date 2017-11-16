@@ -58,19 +58,19 @@ let RideSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now()
+    default: new Date()
   },
   arrivedAt: {
     type: Date,
-    default: Date.now()
+    default: null
   },
   startAt: {
     type: Date,
-    default: Date.now()
+    default: null
   },
   finishedAt: {
     type: Date,
-    default: Date.now()
+    default: null
   },
   duration: {
     type: Number,
@@ -94,9 +94,19 @@ let RideSchema = new mongoose.Schema({
     max: 10,
     default: 10
   },
+  customerRate: {
+    type: Number,
+    min: 0,
+    max: 10,
+    default: 10
+  },
   description: {
     type: String,
     maxlength: [200, 'تعداد کاراکترهای وارد شده، بیش از حد مجاز ({MAXLENGTH}) است.'],
+    default: ''
+  },
+  discontentType: {
+    type: String,
     default: ''
   },
   status: {
@@ -131,6 +141,14 @@ RideSchema
           return driver.save().then(() => next());
         });
     }
+    if(this.isModified('customerRate')) {
+      let customerRate = this.customerRate;
+      return User.findById(this.user).exec()
+        .then(user => {
+          user.rate = (user.rate + customerRate) / 2;
+          return user.save().then(() => next());
+        });
+    }
     return next();
   });
 
@@ -143,13 +161,19 @@ RideSchema
           .then(() => next());
       } else if(this.status === shared.driverStates.waiting) {
         this.arrivedAt = new Date();
+        return next();
       } else if(this.status === shared.driverStates.inProgress) {
         this.startAt = new Date();
+        return next();
       } else if(this.status === shared.rideStatus.finished || this.status === shared.rideStatus.cancelledByUser || this.status === shared.rideStatus.cancelledByDriver) {
         this.finishedAt = new Date();
         this.duration = this.finishedAt - this.startAt;
-        return User.findByIdAndUpdate(this.driver, {driverState: shared.driverStates.on}).exec()
-          .then(() => next());
+        return User.findByIdAndUpdate(this.driver, {
+          driverState: shared.driverStates.on,
+          ride: null
+        }).exec()
+          .then(() => User.findByIdAndUpdate(this.user, {ride: null}).exec()
+            .then(() => next()));
       }
     }
     return next();

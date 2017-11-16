@@ -7,33 +7,43 @@
                 <th st-sort="mobile">شماره</th>
                 <th st-sort="nationalCode">کد ملی</th>
                 <th st-sort="date">عضویت</th>
-                <th st-sort="accountNumber" ng-hide="vm.role === 'user'">شماره حساب</th>
+                <th st-sort="accountNumber" ng-show="vm.role === 'driver'">شماره حساب</th>
                 <th st-sort="email">ایمیل</th>
-                <th st-sort="rate">امتیاز</th>
-                <th st-sort="asset">موجودی</th>
-                <th st-sort="active">وضعیت</th>
-                <th st-sort="sharingCode">کد معرفی</th>
-                <th st-sort="challengerCode">معرفی کننده</th>
+                <th st-sort="rate" ng-hide="vm.role === 'admin'">امتیاز</th>
+                <th st-sort="asset" ng-hide="vm.role === 'admin'">موجودی</th>
+                <th st-sort="active" ng-hide="vm.role === 'admin'">وضعیت</th>
+                <th st-sort="sharingCode" ng-show="vm.role === 'user'">کد معرفی</th>
+                <th st-sort="challengerCode" ng-show="vm.role === 'user'">معرفی کننده</th>
                 <th></th>
             </tr>
             <tr>
-                <th><input st-search="name"/></th>
-                <th><input st-search="mobile"/></th>
-                <th><input st-search="nationalCode"/></th>
-                <th><input st-search="date"/></th>
-                <th ng-hide="vm.role === 'user'"><input st-search="accountNumber"/></th>
-                <th><input st-search="email"/></th>
-                <th><input st-search="rate"/></th>
-                <th><input st-search="asset"/></th>
-                <th>
-                    <select st-search="active">
+                <th><input class="input-sm form-control" type="search" st-search="name"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="mobile"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="nationalCode"/></th>
+                <th><input class="input-sm form-control" type="search" st-search="date"/></th>
+                <th ng-show="vm.role === 'driver'">
+                    <input class="input-sm form-control" type="search" st-search="accountNumber"/>
+                </th>
+                <th><input class="input-sm form-control" type="search" st-search="email"/></th>
+                <th ng-hide="vm.role === 'admin'">
+                    <input class="input-sm form-control" type="number" st-search="rate"/>
+                </th>
+                <th ng-hide="vm.role === 'admin'">
+                    <input class="input-sm form-control" type="number" st-search="asset"/>
+                </th>
+                <th ng-hide="vm.role === 'admin'">
+                    <select class="input-sm form-control" st-search="active">
                         <option value="">همه</option>
                         <option value="{{true}}">فعال</option>
                         <option value="{{false}}">غیرفعال</option>
                     </select>
                 </th>
-                <th><input st-search="sharingCode"/></th>
-                <th><input st-search="challengerCode"/></th>
+                <th ng-show="vm.role === 'user'">
+                    <input class="input-sm form-control" type="search" st-search="sharingCode"/>
+                </th>
+                <th ng-show="vm.role === 'user'">
+                    <input class="input-sm form-control" type="search" st-search="challengerCode"/>
+                </th>
                 <th></th>
             </tr>
             </thead>
@@ -43,16 +53,16 @@
                 <td>{{row.mobile}}</td>
                 <td>{{row.nationalCode}}</td>
                 <td>{{row.date | jalaali:'jYYYY/jMM/jDD'}}</td>
-                <td style="direction: ltr" ng-hide="vm.role === 'user'">{{row.accountNumber}}</td>
+                <td style="direction: ltr" ng-show="vm.role === 'driver'">{{row.accountNumber}}</td>
                 <td>{{row.email}}</td>
-                <td>{{row.rate}} / 10</td>
-                <td>{{row.asset}}</td>
-                <td>
+                <td ng-hide="vm.role === 'admin'">{{row.rate}} / 10</td>
+                <td ng-hide="vm.role === 'admin'">{{row.asset}}</td>
+                <td ng-hide="vm.role === 'admin'">
                     <switch id="enabled" name="enabled" ng-model="row.active"
                             ng-change="vm.toggleActivation(row)"></switch>
                 </td>
-                <td>{{row.sharingCode}}</td>
-                <td>{{row.challengerCode}}</td>
+                <td ng-show="vm.role === 'user'">{{row.sharingCode}}</td>
+                <td ng-show="vm.role === 'user'">{{row.challengerCode}}</td>
                 <td>
                     <button class="btn btn-xs btn-danger" ng-click="vm.remove(row)">
                         <i class="fa fa-trash-o fa-lg"></i>

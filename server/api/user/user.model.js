@@ -97,9 +97,10 @@ let UserSchema = new Schema({
     type: String,
     default: ''
   },
-  lastState: {
-    type: String,
-    default: ''
+  ride: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ride',
+    default: null
   },
   provider: {
     type: String,
@@ -239,6 +240,9 @@ UserSchema
 UserSchema
   .path('sharingCode')
   .validate(function(value) {
+    if(_.isEmpty(value)) {
+      return true;
+    }
     return this.constructor.findOne({sharingCode: value}).exec()
       .then(user => {
         if(user) {

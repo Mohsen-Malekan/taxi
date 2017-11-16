@@ -8,7 +8,9 @@ import path from 'path';
 import fs from 'fs';
 import jsonpatch from 'fast-json-patch';
 import randomstring from 'randomstring';
+import moment from 'moment-jalaali';
 import {sendSMS} from './user.utility';
+import Ride from '../ride/ride.model';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -70,11 +72,28 @@ export function index(req, res) {
   let sort = false;
 
   if(_.has(qs, 'search.predicateObject')) {
-    let props = ['active', 'rate', 'date'];
+    let props = ['active', 'rate', 'date', 'asset'];
     for(let key in qs.search.predicateObject) {
       if(qs.search.predicateObject.hasOwnProperty(key) && key !== 'role') {
         let value = qs.search.predicateObject[key];
         qs.search.predicateObject[key] = _.includes(props, key) ? value : new RegExp(value, 'i');
+      }
+    }
+    if(_.has(qs, 'search.predicateObject.date')) {
+      try {
+        let date = moment(qs.search.predicateObject.date, 'jYYYY/jMM/jDD');
+        if(date === 'Invalid date' || !date.isValid()) {
+          Reflect.deleteProperty(qs.search.predicateObject, 'date');
+        } else {
+          let start = date.format('YYYY/MM/DD');
+          let end = date.add(1, 'days').format('YYYY/MM/DD');
+          qs.search.predicateObject.date = {
+            $gte: new Date(start),
+            $lt: new Date(end)
+          };
+        }
+      } catch(e) {
+        Reflect.deleteProperty(qs.search.predicateObject, 'date');
       }
     }
   }
@@ -85,9 +104,9 @@ export function index(req, res) {
 
   let query;
   if(sort) {
-    query = User.find(qs.search.predicateObject || {}, '-salt -password').sort(sort);
+    query = User.find(qs.search.predicateObject || {}, _.join(config.userFields, ' ')).sort(sort);
   } else {
-    query = User.find(qs.search.predicateObject || {}, '-salt -password');
+    query = User.find(qs.search.predicateObject || {}, _.join(config.userFields, ' '));
   }
 
   return _.clone(query).count((err, count) => {
@@ -146,8 +165,8 @@ export function create(req, res) {
 export function createDriver(req, res) {
   let newUser = new User(req.body);
   newUser.role = 'driver';
-  newUser.active = true;
   newUser.save()
+    .then(user => sendSMS(user))
     .then(user => {
       _.forEach(req.files, (val, key) => {
         let file = val[0];
@@ -323,9 +342,55 @@ export function confirm(req, res) {
 export function me(req, res) {
   let userId = req.user._id;
 
-  return User.findById(userId, '-salt -password -activationCode').exec()
+  return User.findById(userId, '-salt -password -activationCode')
+    .exec()
     .then(handleEntityNotFound(res))
-    .then(user => res.json(user.userInfo))
+    .then(user => {
+      if(user.ride) {
+        return Ride.findById(user.ride)
+          .populate('user', _.join(config.userFields, ' '))
+          .populate('driver', _.join(config.userFields, ' '))
+          .exec()
+          .then(ride => {
+            user.ride = ride;
+            return user;
+          });
+      }
+      return user;
+    })
+    .then(user => user.userInfo)
+    .then(user => {
+      if(user.role === 'driver') {
+        return Ride.find({
+          driver: user.id,
+          status: config.rideStatus.finished,
+          date: {
+            $gte: new Date(moment().startOf('day')),
+            $lte: new Date(moment().endOf('day'))
+          }
+        })
+          .exec()
+          .then(rides => {
+            console.log(`start ${new Date(moment().startOf('day'))}`);
+            console.log(`end ${new Date(moment().endOf('day'))}`);
+            console.log(`rides>>>>> ${rides.length}`);
+            let dailyRate = 0;
+            let dailyIncome = 0;
+            _.forEach(rides, ride => {
+              dailyRate += ride.rate || 0;
+              dailyIncome += ride.cost;
+            });
+            dailyRate = dailyRate / (rides.length || 1);
+            user.dailyRate = dailyRate;
+            user.dailyIncome = dailyIncome;
+            console.log(`user>>>>> ${dailyRate} , ${dailyIncome}`);
+            console.log(`user>>>>> ${user.dailyRate} , ${user.dailyIncome}`);
+            return user;
+          });
+      }
+      return user;
+    })
+    .then(user => res.json(user))
     .catch(handleError(res));
 }
 

@@ -1,5 +1,6 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
+import moment from 'moment-jalaali';
 import routing from './users.routes';
 
 class UsersController {
@@ -37,9 +38,10 @@ class UsersController {
     this.$parent.vm.isLoading = true;
     tableState.search = _.merge(tableState.search, {predicateObject: {role: this.$parent.vm.$stateParams.role}});
 
-    if(_.has(tableState, 'search.predicateObject.date')) {
-      _.set(tableState, 'search.predicateObject.date', '2017-09-30T22:22:48.627Z');
-    }
+    // if(_.has(tableState, 'search.predicateObject.date')) {
+    //   console.log(`>>>>>> ${1}`);
+    //   _.set(tableState, 'search.predicateObject.date', moment(tableState.search.predicateObject.date, 'jYYYY/jMM/jDD').format('YYYY/MM/DD'));
+    // }
 
     this.$parent.vm.$http.get(`api/users?${this.$parent.vm.$hps(tableState)}`).then(result => {
       this.$parent.vm.users = result.data.data;

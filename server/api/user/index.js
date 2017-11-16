@@ -26,7 +26,7 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id', auth.isAuthenticated(), controller.edit);
 router.post('/', controller.create);
-router.post('/driver', [auth.hasRole('admin'), upload.fields(fields)], controller.createDriver);
+router.post('/driver', upload.fields(fields), controller.createDriver);
 router.post('/admin', auth.hasRole('admin'), controller.createAdmin);
 router.get('/confirm', auth.isAuthenticated(), controller.getActivationCode);
 router.post('/confirm', auth.isAuthenticated(), controller.confirm);

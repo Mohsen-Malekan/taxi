@@ -11,7 +11,7 @@ export class MainController {
 
   $onInit() {
     // this.requestActivationCode();
-    this.notifyMe();
+    // this.notifyMe();
   }
 
   requestActivationCode() {

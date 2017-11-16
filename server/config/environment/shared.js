@@ -32,7 +32,7 @@ exports = module.exports = {
     'location',
     'sharingCode',
     'challengerCode',
-    'lastState'
+    'ride'
   ],
   driverStates: {
     on: 'on',
@@ -51,6 +51,6 @@ exports = module.exports = {
     rideCancelledByDriver: 'rideCancelledByDriver',
     rideFinished: 'rideFinished',
     driverFound: 'driverFound',
-    arrivedDriver: 'arrivedDriver',
+    driverArrived: 'driverArrived',
   }
 };

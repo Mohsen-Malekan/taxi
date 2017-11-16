@@ -21,9 +21,9 @@ export function sendNotifDriver(data, appIds, key) {
     timeToLive: 3,
     data
   });
-  console.log('driver->>>>>>>>>>>> ', JSON.stringify(data));
-  console.log('driver->>>>>>>>>>>> ', JSON.stringify(key));
-  console.log('driver->>>>>>>>>>>> ', JSON.stringify(message));
+  console.log('driver->>>>>>>>>>>> ', data);
+  // console.log('driver->>>>>>>>>>>> ', JSON.stringify(key));
+  // console.log('driver->>>>>>>>>>>> ', JSON.stringify(message));
   senderDriver.send(message, appIds, 1, (err, result) => {
     if(err) console.log('gcm-driver-error> ', err);
     else console.log('gcm-driver-result> ', result);
@@ -40,9 +40,9 @@ export function sendNotifUser(data, appIds, key) {
     timeToLive: 3,
     data
   });
-  console.log('-user->>>>>>>>>>>> ', JSON.stringify(data));
-  console.log('-user->>>>>>>>>>>> ', JSON.stringify(key));
-  console.log('-user->>>>>>>>>>>> ', JSON.stringify(message));
+  console.log('-user->>>>>>>>>>>> ', data);
+  // console.log('-user->>>>>>>>>>>> ', JSON.stringify(key));
+  // console.log('-user->>>>>>>>>>>> ', JSON.stringify(message));
   senderUser.send(message, appIds, 1, (err, result) => {
     if(err) console.log('gcm-user-error> ', err);
     else console.log('gcm-user-result> ', result);

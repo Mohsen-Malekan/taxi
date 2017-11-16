@@ -19,8 +19,6 @@ class ReportsController {
     this.$parent.vm.isLoading = true;
     tableState.search = _.merge(tableState.search, {predicateObject: {status: 'finished'}});
 
-    console.log(tableState);
-
     this.$parent.vm.$http.get(`api/rides?${this.$parent.vm.$hps(tableState)}`)
       .then(result => {
         this.$parent.vm.rides = result.data.data;
