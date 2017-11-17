@@ -11,11 +11,11 @@
 'use strict';
 
 import jsonpatch from 'fast-json-patch';
-import Ride from './ride.model';
 import mongoXlsx from 'mongo-xlsx';
-import {Settlement} from './ride.model';
 import _ from 'lodash';
 import moment from 'moment-jalaali';
+import Ride, {Settlement} from './ride.model';
+// import {Settlement} from './ride.model';
 import User from '../user/user.model';
 import {sendNotifDriver, sendNotifUser} from '../user/user.utility';
 import shared from '../../config/environment/shared';
@@ -35,7 +35,8 @@ function patchUpdates(patches) {
     try {
       // eslint-disable-next-line prefer-reflect
       jsonpatch.apply(entity, patches, /*validate*/ true);
-    } catch(err) {
+    }
+    catch(err) {
       return Promise.reject(err);
     }
 
@@ -92,7 +93,8 @@ export function index(req, res) {
         let date = moment(qs.search.predicateObject.date, 'jYYYY/jMM/jDD');
         if(date === 'Invalid date' || !date.isValid()) {
           Reflect.deleteProperty(qs.search.predicateObject, 'date');
-        } else {
+        }
+        else {
           let start = date.format('YYYY/MM/DD');
           let end = date.add(1, 'days').format('YYYY/MM/DD');
           qs.search.predicateObject.date = {
@@ -100,7 +102,8 @@ export function index(req, res) {
             $lt: new Date(end)
           };
         }
-      } catch(e) {
+      }
+      catch(e) {
         Reflect.deleteProperty(qs.search.predicateObject, 'date');
       }
     }
@@ -114,7 +117,8 @@ export function index(req, res) {
   let query;
   if(sort) {
     query = Ride.find(qs.search.predicateObject || {}, '-salt -password').sort(sort);
-  } else {
+  }
+  else {
     query = Ride.find(qs.search.predicateObject || {}, '-salt -password');
   }
 
@@ -163,7 +167,11 @@ export function userRides(req, res) {
 // Gets a list of user Rides from the DB
 export function user(req, res) {
   let userId = req.user.id;
+  let start = Number(req.query.start) || 0;
+  let count = Number(req.query.count) || 20;
   return Ride.find({user: userId})
+    .skip(start)
+    .limit(count)
     .sort({date: -1})
     .populate('user', _.join(shared.userFields, ' '))
     .populate('driver', _.join(shared.userFields, ' '))
@@ -224,6 +232,12 @@ export function assign(req, res) {
     .populate('user', shared.userFields.join(' '))
     .exec()
     .then(ride => {
+      if(ride.status === shared.rideStatus.cancelledByUser) {
+        return Promise.reject('سفر توسط مشتری لغو شده است');
+      }
+      return ride;
+    })
+    .then(ride => {
       if(ride.status !== shared.rideStatus.searching) {
         return Promise.reject('سفر قبلا گرفته شده است');
       }
@@ -279,18 +293,47 @@ export function upsert(req, res) {
   if(req.body._id) {
     Reflect.deleteProperty(req.body, '_id');
   }
+  let origRide;
+  console.log('\nupsert>>> ', req.body, '\n<<<');
   return Ride.findById(req.params.id)
     .populate('user', shared.userFields.join(' '))
     .populate('driver', shared.userFields.join(' '))
     .exec()
     .then(handleEntityNotFound(res))
     .then(ride => {
+      origRide = ride;
+      return ride;
+    })
+    .then(ride => {
       _.forEach(req.body, (val, prop) => {
         ride[prop] = val || ride[prop];
       });
+      if(ride.status === shared.driverStates.waiting) {
+        ride.arrivedAt = new Date();
+      }
+      if(ride.status === shared.driverStates.inProgress) {
+        ride.startAt = new Date();
+      }
       return ride.save();
     })
-    .then(ride => sendNotifUser(ride, [ride.user.appId], shared.notificationKeys.info))
+    .then(ride => {
+      if(ride.status === shared.rideStatus.cancelledByDriver) {
+        sendNotifUser(ride, [ride.user.appId], shared.notificationKeys.rideCancelledByDriver);
+      }
+      else {
+        sendNotifUser(ride, [ride.user.appId], shared.notificationKeys.info);
+      }
+      return ride;
+    })
+    .then(ride => {
+      if(ride.status === shared.rideStatus.cancelledByUser) {
+        sendNotifDriver(ride, [ride.driver.appId], shared.notificationKeys.rideCancelledByUser);
+      }
+      if(origRide.cost !== ride.cost) {
+        sendNotifDriver(ride, [ride.driver.appId], shared.notificationKeys.info);
+      }
+      return ride;
+    })
     .then(respondWithResult(res))
     .catch(handleError(res));
 

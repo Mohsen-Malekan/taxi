@@ -144,50 +144,67 @@ export function toggleActivation(req, res) {
  * Creates a new user
  */
 export function create(req, res) {
-  let newUser = new User(req.body);
-  newUser.save()
-    .then(user => sendSMS(user))
-    .then(user => {
-      let token = jwt.sign({_id: user._id}, config.secrets.session, {
-        expiresIn: '5000d'
-      });
-      res.json({
-        token,
-        user: user.userInfo
-      });
+  User.findOneAndRemove({
+    mobile: req.body.mobile,
+    active: false
+  })
+    .exec()
+    .then(() => {
+      let newUser = new User(req.body);
+      newUser.save()
+        .then(user => sendSMS(user))
+        .then(user => {
+          let token = jwt.sign({_id: user._id}, config.secrets.session, {
+            expiresIn: '5000d'
+          });
+          res.json({
+            token,
+            user: user.userInfo
+          });
+        })
+        .catch(validationError(res));
     })
     .catch(validationError(res));
+
 }
 
 /**
  * Creates a new user with role='driver'
  */
 export function createDriver(req, res) {
-  let newUser = new User(req.body);
-  newUser.role = 'driver';
-  newUser.save()
-    .then(user => sendSMS(user))
-    .then(user => {
-      _.forEach(req.files, (val, key) => {
-        let file = val[0];
-        let tempPath = file.path;
-        // let ext = _.last(_.split(file.originalname, '.'));
-        let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${key}.jpg`);
-        fs.rename(tempPath, targetPath, err => {
-          // if(err) return handleError(res)(err);
-          if(err) console.log('createDriver:rename> ', err);
-          fs.unlink(tempPath, err => {
-            if(err) console.log('createDriver:unlink> ', err);
+  User.findOneAndRemove({
+    mobile: req.body.mobile,
+    active: false
+  })
+    .exec()
+    .then(() => {
+      let newUser = new User(req.body);
+      newUser.role = 'driver';
+      newUser.save()
+        .then(user => sendSMS(user))
+        .then(user => {
+          _.forEach(req.files, (val, key) => {
+            let file = val[0];
+            let tempPath = file.path;
+            // let ext = _.last(_.split(file.originalname, '.'));
+            let targetPath = path.join(__dirname, '../../../client/assets/images/', `${user._id}.${key}.jpg`);
+            fs.rename(tempPath, targetPath, err => {
+              // if(err) return handleError(res)(err);
+              if(err) console.log('createDriver:rename> ', err);
+              fs.unlink(tempPath, err => {
+                if(err) console.log('createDriver:unlink> ', err);
+              });
+            });
           });
-        });
-      });
-      let token = jwt.sign({_id: user._id}, config.secrets.session, {
-        expiresIn: '5000d'
-      });
-      return res.json({
-        token,
-        user: user.userInfo
-      });
+          let token = jwt.sign({_id: user._id}, config.secrets.session, {
+            expiresIn: '5000d'
+          });
+          return res.json({
+            token,
+            user: user.userInfo
+          });
+        })
+        .catch(validationError(res));
     })
     .catch(validationError(res));
 }
@@ -196,18 +213,26 @@ export function createDriver(req, res) {
  * Creates a new user with role='admin'
  */
 export function createAdmin(req, res) {
-  let newUser = new User(req.body);
-  newUser.role = 'admin';
-  newUser.active = true;
-  newUser.save()
-    .then(function(user) {
-      let token = jwt.sign({_id: user._id}, config.secrets.session, {
-        expiresIn: '5000d'
-      });
-      res.json({
-        token,
-        user: user.userInfo
-      });
+  User.findOneAndRemove({
+    mobile: req.body.mobile,
+    active: false
+  })
+    .exec()
+    .then(() => {
+      let newUser = new User(req.body);
+      newUser.role = 'admin';
+      newUser.active = true;
+      newUser.save()
+        .then(function(user) {
+          let token = jwt.sign({_id: user._id}, config.secrets.session, {
+            expiresIn: '5000d'
+          });
+          res.json({
+            token,
+            user: user.userInfo
+          });
+        })
+        .catch(validationError(res));
     })
     .catch(validationError(res));
 }

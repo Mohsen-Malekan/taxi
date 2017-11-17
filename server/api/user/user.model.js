@@ -240,7 +240,7 @@ UserSchema
 UserSchema
   .path('sharingCode')
   .validate(function(value) {
-    if(_.isEmpty(value)) {
+    if(_.isEmpty(value) || !value || value.trim() === '') {
       return true;
     }
     return this.constructor.findOne({sharingCode: value}).exec()
